@@ -20,15 +20,23 @@ const binanceKlinesURL = "https://api.binance.com/api/v3/klines"
 func main() {
 	symbol := flag.String("symbol","BTCUSDT","Binance symbol")
 	days := flag.Int("days",90,"history length in days")
+	endDate := flag.String("end","","history end date in UTC, YYYY-MM-DD (default: now)")
 	flag.Parse()
 	if *days < 7 { fmt.Fprintln(os.Stderr,"days must be at least 7"); os.Exit(2) }
 
-	bars,err := fetch15M(strings.ToUpper(*symbol),*days)
+	end := time.Now().UTC()
+	if strings.TrimSpace(*endDate) != "" {
+		t,err := time.Parse("2006-01-02",strings.TrimSpace(*endDate))
+		if err != nil { fmt.Fprintln(os.Stderr,"invalid -end date; use YYYY-MM-DD:",err); os.Exit(2) }
+		end = t.Add(24*time.Hour-time.Millisecond)
+	}
+
+	bars,err := fetch15M(strings.ToUpper(*symbol),*days,end)
 	if err != nil { fmt.Fprintln(os.Stderr,"fetch failed:",err); os.Exit(1) }
 
 	s := wyckoff.ValidateV3(strings.ToUpper(*symbol),bars)
 	fmt.Printf("\nWyckoff V3 validation — %s 15M\n",s.Symbol)
-	fmt.Printf("Bars: %d | Unique qualifying ranges: %d | Study triggers: %d\n",s.Bars,s.UniqueRanges,s.Overall.Triggers)
+	fmt.Printf("Window end: %s | Bars: %d | Unique qualifying ranges: %d | Study triggers: %d\n",end.UTC().Format("2006-01-02"),s.Bars,s.UniqueRanges,s.Overall.Triggers)
 	if s.Overall.Triggers==0 { fmt.Println("No qualifying V3 Spring+Test study triggers found in this period."); return }
 
 	fmt.Println("\nOverall:")
@@ -66,6 +74,11 @@ func main() {
 	fmt.Println("\nV4 causal entry/stop variants — detector unchanged:")
 	fmt.Println("SPRING stop = Spring low - 0.75 ATR | POSTTEST stop = lowest Test-to-entry low - 0.25 ATR")
 	for _,r:=range variants.Variants { printV4Variant(r) }
+
+	frozen := wyckoff.ValidateV4FrozenFinalists(bars,s)
+	fmt.Println("\nV4 frozen finalists — NEXT-BAR OPEN, POSTTEST stop:")
+	fmt.Println("Decision is made on candle close; execution is the following 15M candle open.")
+	for _,r:=range frozen.Variants { printV4Variant(r) }
 
 	fmt.Println("\nRecent V3 triggers:")
 	start:=0; if len(s.Events)>12 { start=len(s.Events)-12 }
@@ -118,16 +131,16 @@ func printV4Causal(r wyckoff.V4CausalSummary) {
 
 func printV4Variant(r wyckoff.V4VariantResult) {
 	if r.Entries==0 {
-		fmt.Printf("%-34s n=%3d | entry %.1f%%\n",r.Name,r.Entries,r.EntryRate)
+		fmt.Printf("%-42s n=%3d | entry %.1f%%\n",r.Name,r.Entries,r.EntryRate)
 		return
 	}
-	fmt.Printf("%-34s n=%3d | entry %.1f%% | delay %.2f | risk %.2f%% | 16h %.1f%% %+.3f%% | 1R %+.3fR | 2R %+.3fR | 3R %+.3fR\n",
+	fmt.Printf("%-42s n=%3d | entry %.1f%% | delay %.2f | risk %.2f%% | 16h %.1f%% %+.3f%% | 1R %+.3fR | 2R %+.3fR | 3R %+.3fR\n",
 		r.Name,r.Entries,r.EntryRate,r.AvgDelay,r.AvgRiskPct,r.WinRate16H,r.AvgReturn16H,r.AvgR1,r.AvgR2,r.AvgR3)
 }
 
-func fetch15M(symbol string, days int) ([]models.OHLCV,error) {
+func fetch15M(symbol string, days int, end time.Time) ([]models.OHLCV,error) {
 	client:=&http.Client{Timeout:20*time.Second}
-	end:=time.Now().UTC(); start:=end.Add(-time.Duration(days)*24*time.Hour)
+	end=end.UTC(); start:=end.Add(-time.Duration(days)*24*time.Hour)
 	startMS,endMS:=start.UnixMilli(),end.UnixMilli()
 	bars:=make([]models.OHLCV,0,days*96)
 	for startMS<endMS {
