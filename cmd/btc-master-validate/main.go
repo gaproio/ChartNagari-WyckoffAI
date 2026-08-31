@@ -57,6 +57,17 @@ func main() {
 	fmt.Println("Accepted/rejected label may use the next 8 candles; this section is NOT a tradable V3-time filter.")
 	for _,b := range report.ByBDecision { printStructureCohort(b) }
 
+	fmt.Println("\nB decision selection by year (same common V3 next-open anchor):")
+	lastYear := 0
+	for _,b := range report.ByBDecisionYear {
+		if b.Year != lastYear {
+			fmt.Printf("%d:\n",b.Year)
+			lastYear = b.Year
+		}
+		fmt.Print("  ")
+		printStructureCohort(b)
+	}
+
 	fmt.Println("\nOverall:")
 	printBucket(report.Overall)
 	fmt.Println("\nBy year:")
