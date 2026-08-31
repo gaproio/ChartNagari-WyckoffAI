@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-08-31T11:10:25Z
-# git_commit_before_report: 2f7bcd5479110145e1f0d7b4d847aea03e557be3
+# generated_utc: 2026-08-31T11:15:33Z
+# git_commit_before_report: ad816ff0e9d67bf8bc9caefc3284d578a722d2dc
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -8,7 +8,7 @@
 
 
 BTC MASTER REPORT — frozen B profile
-Window end: 2026-08-31 | days 3300 | bars 316184 | V3 structures 105
+Window end: 2026-08-31 | days 3300 | bars 316185 | V3 structures 105
 Entry: MIDPOINT + prospective HL decision -> NEXT 15M OPEN
 Stop: lowest Test-to-decision low - 0.25 Spring ATR | Target benchmark: 3R | Max hold: 16h
 Costs: fee 10.0 bps/side + slippage 5.0 bps/side | regime: 30D return >+10% BULL, <-10% BEAR, else SIDEWAYS
@@ -154,3 +154,10 @@ Rescales only the existing research cost assumption: 0x, 0.5x, 1x baseline, and 
 0.5X COST        n=23 | net-win 47.8% | total +7.546R avg +0.328R median -0.026R | PF 1.79
 1X BASELINE      n=23 | net-win 47.8% | total +6.178R avg +0.269R median -0.034R | PF 1.60
 2X COST STRESS   n=23 | net-win 47.8% | total +3.442R avg +0.150R median -0.050R | PF 1.29
+
+BTC 15M temporal robustness diagnostic (DESCRIPTIVE; no era filter):
+Fixed calendar blocks: 2017-2019, 2020-2022, 2023-2025, and 2026 partial. No period was chosen from performance.
+2017-2019    n=14 | net-win 35.7% | total -3.560R avg -0.254R median -0.468R | PF 0.54 | max DD 3.565R | max losses 4
+2020-2022    n= 6 | net-win 83.3% | total +8.366R avg +1.394R median +1.359R | PF 8.63 | max DD 1.097R | max losses 1
+2023-2025    n= 1 | net-win 0.0% | total -1.266R avg -1.266R median -1.266R | PF 0.00 | max DD 1.266R | max losses 1
+2026 PARTIAL n= 2 | net-win 50.0% | total +2.638R avg +1.319R median +1.319R | PF 10.70 | max DD 0.272R | max losses 1
