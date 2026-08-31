@@ -36,6 +36,27 @@ func (e *RuleEngine) Register(r rule.AnalysisRule) {
 	e.records = append(e.records, ruleRecord{impl: r, entry: entry})
 }
 
+// chronologicalTimeframes returns an AnalysisContext copy whose candle slices
+// are oldest-first. Storage-backed live callers commonly supply newest-first
+// slices, while methodology rules treat bars[len-1] as the current candle.
+func chronologicalTimeframes(ctx models.AnalysisContext) models.AnalysisContext {
+	ordered := make(map[string][]models.OHLCV, len(ctx.Timeframes))
+	for tf, bars := range ctx.Timeframes {
+		if len(bars) < 2 || !bars[0].OpenTime.After(bars[len(bars)-1].OpenTime) {
+			ordered[tf] = bars
+			continue
+		}
+
+		reversed := make([]models.OHLCV, len(bars))
+		for i, bar := range bars {
+			reversed[len(bars)-1-i] = bar
+		}
+		ordered[tf] = reversed
+	}
+	ctx.Timeframes = ordered
+	return ctx
+}
+
 // Run executes all registered active rules against ctx.
 // For each rule:
 //  1. RequiredIndicators() keys are checked against ctx.Indicators; if any key
@@ -45,6 +66,7 @@ func (e *RuleEngine) Register(r rule.AnalysisRule) {
 //
 // Returns all produced signals sorted by Score descending.
 func (e *RuleEngine) Run(ctx models.AnalysisContext) []models.Signal {
+	ctx = chronologicalTimeframes(ctx)
 	var signals []models.Signal
 
 	for _, rec := range e.records {
