@@ -1,0 +1,11 @@
+# BTCUSDT / 15M autonomous loop failure
+# generated_utc: 2026-08-31T10:52:45Z
+# source_commit: bc57e36a90a06ecdfa7882e4b1aef5fb35956c88
+# exit_status: 127
+
+From https://github.com/gaproio/ChartNagari-WyckoffAI
+ * branch            wyckoff-v2 -> FETCH_HEAD
+Already up to date.
+
+== BTCUSDT / 15M tests ==
+./scripts/btc-master-auto.sh: line 41: go: command not found
