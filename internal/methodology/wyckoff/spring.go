@@ -4,34 +4,57 @@ import (
 	"fmt"
 	"time"
 
+	structural "github.com/Ju571nK/Chatter/internal/wyckoff"
 	"github.com/Ju571nK/Chatter/pkg/models"
 )
 
-// WyckoffSpringRule detects the Wyckoff Spring pattern.
-//
-// A Spring occurs when price temporarily breaks BELOW the support (SWING_LOW)
-// with a wick, then closes BACK ABOVE it — often accompanied by high volume.
-//
-// Detection (per TF):
-//   - Look at last 5 bars (including current)
-//   - Any bar in bars[len-5..len-2] has Low < SWING_LOW (the spring dip)
-//   - Current bar (bars[len-1]) Close > SWING_LOW (recovery)
-//   - Volume on recovery ≥ 1.5× VOLUME_MA_20 (institutional buying)
-//
-// Score = 1.0 for confirmed spring.
-// Requires SWING_LOW, VOLUME_MA_20, and ≥ 5 bars.
+// WyckoffSpringRule detects a structurally confirmed V2 accumulation trigger on
+// 15M first, then falls back to the legacy swing-low Spring heuristic on higher
+// timeframes. The V2 path emits a distinct rule name so downstream consumers can
+// distinguish it from the legacy detector.
 type WyckoffSpringRule struct{}
 
 func (r *WyckoffSpringRule) Name() string                 { return "wyckoff_spring" }
 func (r *WyckoffSpringRule) RequiredIndicators() []string { return nil }
 
 func (r *WyckoffSpringRule) Analyze(ctx models.AnalysisContext) (*models.Signal, error) {
+	// Prefer the structural V2 analyzer on 15M. A confirmed Spring+Test starts at
+	// confidence 0.78; SOS/LPS raises it further. Score is deliberately scaled so
+	// structurally confirmed V2 setups can clear the current pipeline score gate
+	// without weakening thresholds for unrelated rules.
+	if bars15, ok := ctx.Timeframes["15M"]; ok && len(bars15) >= 30 {
+		analysis := structural.AnalyzeV2(ctx.Symbol, "15M", bars15)
+		if analysis.ReadyForLong && analysis.Confidence >= 0.78 {
+			stage := "Spring + Test"
+			if analysis.HasSOS {
+				stage = "SOS confirmed"
+			}
+
+			return &models.Signal{
+				Symbol:    ctx.Symbol,
+				Timeframe: "15M",
+				Rule:      "wyckoff_v2_long",
+				Direction: "LONG",
+				Score:     analysis.Confidence * 3.0,
+				Message: fmt.Sprintf(
+					"[15M] Wyckoff V2 %s | Phase %s | confidence %.0f%% | range %.4f–%.4f",
+					stage,
+					analysis.Phase,
+					analysis.Confidence*100,
+					analysis.Range.Support,
+					analysis.Range.Resistance,
+				),
+				CreatedAt: time.Now(),
+			}, nil
+		}
+	}
+
 	const lookback = 5
 	const volMultiplier = 1.5
 
-	// 15M is the fast trigger timeframe; higher timeframes remain context.
-	tfs := []string{"1W", "1D", "4H", "1H", "15M"}
-	tfW := map[string]float64{"1W": 2.0, "1D": 1.5, "4H": 1.2, "1H": 1.0, "15M": 0.8}
+	// Legacy detector remains as a fallback/context signal.
+	tfs := []string{"1W", "1D", "4H", "1H"}
+	tfW := map[string]float64{"1W": 2.0, "1D": 1.5, "4H": 1.2, "1H": 1.0}
 
 	bestScore := 0.0
 	bestTF := ""
@@ -55,7 +78,6 @@ func (r *WyckoffSpringRule) Analyze(ctx models.AnalysisContext) (*models.Signal,
 		curr := bars[len(bars)-1]
 		prev := bars[len(bars)-lookback : len(bars)-1]
 
-		// Check if any prior bar dipped below swing low
 		dipped := false
 		for _, b := range prev {
 			if b.Low < swingLow {
@@ -67,18 +89,15 @@ func (r *WyckoffSpringRule) Analyze(ctx models.AnalysisContext) (*models.Signal,
 			continue
 		}
 
-		// Current bar must close above swing low
 		if curr.Close <= swingLow {
 			continue
 		}
 
-		// Volume confirmation
 		if curr.Volume < volMultiplier*volMA {
 			continue
 		}
 
-		rawScore := 1.0
-		weighted := rawScore * tfW[tf]
+		weighted := tfW[tf]
 		if weighted > bestScore {
 			bestScore = weighted
 			bestTF = tf
@@ -96,7 +115,7 @@ func (r *WyckoffSpringRule) Analyze(ctx models.AnalysisContext) (*models.Signal,
 		Rule:      r.Name(),
 		Direction: "LONG",
 		Score:     1.0,
-		Message:   fmt.Sprintf("[%s] Wyckoff 스프링 패턴 → LONG (스윙저점: %.4f)", bestTF, bestSwingLow),
+		Message:   fmt.Sprintf("[%s] Wyckoff Spring pattern -> LONG (swing low: %.4f)", bestTF, bestSwingLow),
 		CreatedAt: time.Now(),
 	}, nil
 }
