@@ -38,6 +38,13 @@ func main() {
 	fmt.Println("\nBy V3 trade-score threshold:")
 	for _,b:=range s.ByScore { printBucket(b); printRisk(b) }
 
+	exec := wyckoff.ValidateV3Execution(bars,s)
+	fmt.Println("\nExecution comparison — same V3 signals, detector unchanged:")
+	fmt.Println("Overall:")
+	for _,x:=range exec.Overall { printExecution(x) }
+	fmt.Println("\nTradeScore >= 0.65:")
+	for _,x:=range exec.Score65 { printExecution(x) }
+
 	fmt.Println("\nRecent V3 triggers:")
 	start:=0; if len(s.Events)>12 { start=len(s.Events)-12 }
 	for _,e:=range s.Events[start:] {
@@ -56,6 +63,12 @@ func printRisk(b wyckoff.V3ValidationBucket) {
 	if b.Triggers==0 { return }
 	fmt.Printf("             risk %.2f%% | 1R win %.1f%% avg %+.3fR | 2R win %.1f%% avg %+.3fR | 3R win %.1f%% avg %+.3fR\n",
 		b.AvgRiskPct,b.R1WinRate,b.AvgR1,b.R2WinRate,b.AvgR2,b.R3WinRate,b.AvgR3)
+}
+
+func printExecution(x wyckoff.V3ExecutionSummary) {
+	if x.Trades==0 { fmt.Printf("%-20s n=%3d\n",x.Name,x.Trades); return }
+	fmt.Printf("%-20s n=%3d | risk %.2f%% | 1R %.1f%% %+.3fR | 2R %.1f%% %+.3fR | 3R %.1f%% %+.3fR\n",
+		x.Name,x.Trades,x.AvgRiskPct,x.R1WinRate,x.AvgR1,x.R2WinRate,x.AvgR2,x.R3WinRate,x.AvgR3)
 }
 
 func fetch15M(symbol string, days int) ([]models.OHLCV,error) {
