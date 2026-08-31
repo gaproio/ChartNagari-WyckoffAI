@@ -62,6 +62,11 @@ func main() {
 	fmt.Println("\nV4 causal study — MIDPOINT RECLAIM + confirmed HIGHER LOW:")
 	printV4Causal(causal)
 
+	variants := wyckoff.ValidateV4EntryVariants(bars,s)
+	fmt.Println("\nV4 causal entry/stop variants — detector unchanged:")
+	fmt.Println("SPRING stop = Spring low - 0.75 ATR | POSTTEST stop = lowest Test-to-entry low - 0.25 ATR")
+	for _,r:=range variants.Variants { printV4Variant(r) }
+
 	fmt.Println("\nRecent V3 triggers:")
 	start:=0; if len(s.Events)>12 { start=len(s.Events)-12 }
 	for _,e:=range s.Events[start:] {
@@ -109,6 +114,15 @@ func printV4Causal(r wyckoff.V4CausalSummary) {
 		r.V3Signals,r.V4Entries,r.EntryRate,r.AvgDelayBars,r.AvgRiskPct)
 	fmt.Printf("16h win %.1f%% avg %+.3f%% | 1R %.1f%% %+.3fR | 2R %.1f%% %+.3fR | 3R %.1f%% %+.3fR\n",
 		r.WinRate16H,r.AvgReturn16H,r.R1WinRate,r.AvgR1,r.R2WinRate,r.AvgR2,r.R3WinRate,r.AvgR3)
+}
+
+func printV4Variant(r wyckoff.V4VariantResult) {
+	if r.Entries==0 {
+		fmt.Printf("%-34s n=%3d | entry %.1f%%\n",r.Name,r.Entries,r.EntryRate)
+		return
+	}
+	fmt.Printf("%-34s n=%3d | entry %.1f%% | delay %.2f | risk %.2f%% | 16h %.1f%% %+.3f%% | 1R %+.3fR | 2R %+.3fR | 3R %+.3fR\n",
+		r.Name,r.Entries,r.EntryRate,r.AvgDelay,r.AvgRiskPct,r.WinRate16H,r.AvgReturn16H,r.AvgR1,r.AvgR2,r.AvgR3)
 }
 
 func fetch15M(symbol string, days int) ([]models.OHLCV,error) {
