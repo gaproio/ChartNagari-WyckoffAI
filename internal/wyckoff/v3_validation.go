@@ -18,11 +18,18 @@ type V3ValidationEvent struct {
 	SpringQuality float64 `json:"spring_quality"`
 	TestQuality   float64 `json:"test_quality"`
 	StructureConf float64 `json:"structure_confidence"`
+	SpringLow     float64 `json:"spring_low"`
+	SpringATR     float64 `json:"spring_atr"`
+	StopPrice     float64 `json:"stop_price"`
+	RiskPct       float64 `json:"risk_pct"`
 	Return4H      float64 `json:"return_4h_pct"`
 	Return8H      float64 `json:"return_8h_pct"`
 	Return16H     float64 `json:"return_16h_pct"`
 	MaxFav16H     float64 `json:"max_favorable_16h_pct"`
 	MaxAdverse16H float64 `json:"max_adverse_16h_pct"`
+	R1            float64 `json:"r1_result"`
+	R2            float64 `json:"r2_result"`
+	R3            float64 `json:"r3_result"`
 }
 
 type V3ValidationBucket struct {
@@ -37,6 +44,13 @@ type V3ValidationBucket struct {
 	AvgMFE16H    float64 `json:"avg_mfe_16h_pct"`
 	AvgMAE16H    float64 `json:"avg_mae_16h_pct"`
 	AvgScore     float64 `json:"avg_trade_score"`
+	AvgRiskPct   float64 `json:"avg_risk_pct"`
+	R1WinRate    float64 `json:"r1_win_rate"`
+	R2WinRate    float64 `json:"r2_win_rate"`
+	R3WinRate    float64 `json:"r3_win_rate"`
+	AvgR1        float64 `json:"avg_r1"`
+	AvgR2        float64 `json:"avg_r2"`
+	AvgR3        float64 `json:"avg_r3"`
 }
 
 type V3ValidationSummary struct {
@@ -52,6 +66,11 @@ type V3ValidationSummary struct {
 // ValidateV3 performs a causal rolling replay. No future candles are passed to
 // AnalyzeV3Foundation. One range can trigger only once, which prevents repeated
 // counting as the same structure remains visible over subsequent candles.
+//
+// Trade simulation uses the Test-close signal price, a stop 0.25 ATR below the
+// Spring low, and a 16-hour maximum holding period. Targets are 1R, 2R and 3R.
+// If stop and target are both touched in the same 15M candle, stop wins. This is
+// deliberately conservative because OHLC data cannot reveal intrabar ordering.
 func ValidateV3(symbol string, input []models.OHLCV) V3ValidationSummary {
 	bars := v2Chronological(input)
 	out := V3ValidationSummary{Symbol:symbol, Timeframe:"15M", Bars:len(bars)}
@@ -70,10 +89,22 @@ func ValidateV3(symbol string, input []models.OHLCV) V3ValidationSummary {
 
 		entry := bars[i].Close
 		if entry <= 0 { continue }
+		springIdx := -1
+		springATR := 0.0
+		for _, ev := range a.Events {
+			if ev.Type == V3EventSpring { springIdx = ev.BarIndex; springATR = ev.ATR; break }
+		}
+		if springIdx < 0 || start+springIdx < 0 || start+springIdx >= len(bars) || springATR <= 0 { continue }
+		springLow := bars[start+springIdx].Low
+		stop := springLow - 0.25*springATR
+		if stop <= 0 || stop >= entry { continue }
+		riskPct := (entry-stop)/entry*100
+
 		e := V3ValidationEvent{
 			BarIndex:i, Time:bars[i].OpenTime.Unix(), EntryPrice:entry, RangeID:id,
 			TradeScore:a.TradeScore, SpringQuality:a.SpringQuality, TestQuality:a.TestQuality,
-			StructureConf:a.StructureConfidence,
+			StructureConf:a.StructureConfidence, SpringLow:springLow, SpringATR:springATR,
+			StopPrice:stop, RiskPct:riskPct,
 			Return4H:pctReturn(entry,bars[i+h4].Close), Return8H:pctReturn(entry,bars[i+h8].Close),
 			Return16H:pctReturn(entry,bars[i+h16].Close),
 		}
@@ -84,9 +115,12 @@ func ValidateV3(symbol string, input []models.OHLCV) V3ValidationSummary {
 		}
 		e.MaxFav16H = pctReturn(entry,maxHigh)
 		e.MaxAdverse16H = pctReturn(entry,minLow)
+		e.R1 = simulateRTrade(bars, i, h16, entry, stop, 1)
+		e.R2 = simulateRTrade(bars, i, h16, entry, stop, 2)
+		e.R3 = simulateRTrade(bars, i, h16, entry, stop, 3)
 		out.Events = append(out.Events,e)
 	}
-	out.UniqueRanges = len(seen)
+	out.UniqueRanges = len(out.Events)
 	out.Overall = summarizeV3Validation("ALL",out.Events)
 	for _, threshold := range []float64{0.60,0.65,0.70,0.75,0.80} {
 		name := fmt.Sprintf("SCORE>=%.2f",threshold)
@@ -94,6 +128,24 @@ func ValidateV3(symbol string, input []models.OHLCV) V3ValidationSummary {
 		out.ByScore = append(out.ByScore,summarizeV3Validation(name,filtered))
 	}
 	return out
+}
+
+func simulateRTrade(bars []models.OHLCV, entryIndex, maxBars int, entry, stop float64, targetR float64) float64 {
+	risk := entry-stop
+	if risk <= 0 { return 0 }
+	target := entry + targetR*risk
+	end := entryIndex+maxBars
+	if end >= len(bars) { end = len(bars)-1 }
+	for j:=entryIndex+1; j<=end; j++ {
+		stopHit := bars[j].Low <= stop
+		targetHit := bars[j].High >= target
+		if stopHit { return -1 }
+		if targetHit { return targetR }
+	}
+	// Time exit at the final close, expressed in R and capped only by observed
+	// price movement. This keeps unresolved trades visible instead of labeling
+	// them artificial wins or losses.
+	return (bars[end].Close-entry)/risk
 }
 
 func v3ValidationRangeID(a V3Analysis) string {
@@ -112,15 +164,19 @@ func v3ValidationRangeID(a V3Analysis) string {
 func summarizeV3Validation(name string, events []V3ValidationEvent) V3ValidationBucket {
 	b := V3ValidationBucket{Name:name,Triggers:len(events)}
 	if len(events)==0 { return b }
-	var w4,w8,w16 int
+	var w4,w8,w16,r1w,r2w,r3w int
 	for _,e := range events {
 		b.AvgReturn4H += e.Return4H; b.AvgReturn8H += e.Return8H; b.AvgReturn16H += e.Return16H
 		b.AvgMFE16H += e.MaxFav16H; b.AvgMAE16H += e.MaxAdverse16H; b.AvgScore += e.TradeScore
+		b.AvgRiskPct += e.RiskPct; b.AvgR1 += e.R1; b.AvgR2 += e.R2; b.AvgR3 += e.R3
 		if e.Return4H>0 { w4++ }; if e.Return8H>0 { w8++ }; if e.Return16H>0 { w16++ }
+		if e.R1>0 { r1w++ }; if e.R2>0 { r2w++ }; if e.R3>0 { r3w++ }
 	}
 	n:=float64(len(events))
 	b.AvgReturn4H/=n; b.AvgReturn8H/=n; b.AvgReturn16H/=n; b.AvgMFE16H/=n; b.AvgMAE16H/=n; b.AvgScore/=n
+	b.AvgRiskPct/=n; b.AvgR1/=n; b.AvgR2/=n; b.AvgR3/=n
 	b.WinRate4H=float64(w4)/n*100; b.WinRate8H=float64(w8)/n*100; b.WinRate16H=float64(w16)/n*100
+	b.R1WinRate=float64(r1w)/n*100; b.R2WinRate=float64(r2w)/n*100; b.R3WinRate=float64(r3w)/n*100
 	return b
 }
 
