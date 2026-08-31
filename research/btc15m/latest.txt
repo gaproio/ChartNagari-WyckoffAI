@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-08-31T11:04:42Z
-# git_commit_before_report: ecb1831ebeb333f88f7f5c2092cc126172c2a5af
+# generated_utc: 2026-08-31T11:10:25Z
+# git_commit_before_report: 2f7bcd5479110145e1f0d7b4d847aea03e557be3
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -142,3 +142,15 @@ Trades:
 2024-04-16 06:45 | SIDEWAYS_30D 30D -3.1% | risk 1.13% | STOP   exit 14 bars | gross -1.000R net -1.266R | 16h +1.30% | MFE +2.22% MAE -2.17%
 2026-02-06 01:15 | BEAR_30D    30D -30.5% | risk 3.33% | TARGET exit 64 bars | gross +3.000R net +2.910R | 16h +10.26% | MFE +10.38% MAE -0.86%
 2026-06-27 09:00 | BEAR_30D    30D -17.5% | risk 3.37% | TIME   exit 64 bars | gross -0.183R net -0.272R | 16h -0.62% | MFE +0.80% MAE -0.99%
+
+BTC 15M sequence/tail-dependence diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Chronological NetR path of the exact frozen trades; measures concentration and drawdown, not a new filter.
+trades 23 | total net +6.178R | median -0.034R | PF 1.60 | max DD 4.662R | max consecutive losses 5
+positive/negative/flat 11/12/0 | largest winner +2.910R = 47.1% of total net | top 3 winners +8.613R = 139.4% of total net
+
+BTC 15M cost-sensitivity diagnostic (ROBUSTNESS; frozen rules unchanged):
+Rescales only the existing research cost assumption: 0x, 0.5x, 1x baseline, and 2x stress. This is not an exchange fee claim.
+0X FRICTIONLESS  n=23 | net-win 47.8% | total +8.914R avg +0.388R median -0.018R | PF 2.00
+0.5X COST        n=23 | net-win 47.8% | total +7.546R avg +0.328R median -0.026R | PF 1.79
+1X BASELINE      n=23 | net-win 47.8% | total +6.178R avg +0.269R median -0.034R | PF 1.60
+2X COST STRESS   n=23 | net-win 47.8% | total +3.442R avg +0.150R median -0.050R | PF 1.29
