@@ -1,6 +1,6 @@
 score_threshold: 12
 cooldown_hours: 4
-mtf_consensus_min: 2
+mtf_consensus_min: 1
 crypto_tp_mult: 1.5
 crypto_sl_mult: 0.75
 stock_tp_mult: 2
