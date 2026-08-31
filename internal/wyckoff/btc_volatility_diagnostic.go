@@ -34,6 +34,10 @@ type btcVolatilityObservation struct {
 // days of 15M candles. LOW/MID/HIGH are fixed terciles (<=33, 33-67, >67), not
 // thresholds selected from trade outcomes. Using a rolling percentile makes the
 // comparison meaningful across very different BTC price/volatility eras.
+//
+// The same causal observations are also grouped into deliberately broad
+// structural-risk zones measured in ATR multiples (<=3, 3-6, >6). These are
+// descriptive diagnostics only; they do not create a max-risk rule.
 func ValidateBTCVolatilityDiagnostic(input []models.OHLCV, report BTCMasterReport) []BTCVolatilityBucket {
 	bars := v2Chronological(input)
 	atr := v3ATRSeries(bars, 14)
@@ -42,10 +46,15 @@ func ValidateBTCVolatilityDiagnostic(input []models.OHLCV, report BTCMasterRepor
 		indexByTime[bars[i].OpenTime.Unix()] = i
 	}
 
-	groups := map[string][]btcVolatilityObservation{
-		"VOL LOW <=33P": {},
+	volGroups := map[string][]btcVolatilityObservation{
+		"VOL LOW <=33P":  {},
 		"VOL MID 33-67P": {},
-		"VOL HIGH >67P": {},
+		"VOL HIGH >67P":  {},
+	}
+	riskATRGroups := map[string][]btcVolatilityObservation{
+		"RISKATR <=3": {},
+		"RISKATR 3-6": {},
+		"RISKATR >6":  {},
 	}
 	const lookback = 30 * 24 * 4 // 30 days of 15M bars
 
@@ -68,23 +77,33 @@ func ValidateBTCVolatilityDiagnostic(input []models.OHLCV, report BTCMasterRepor
 		}
 		if valid == 0 { continue }
 		percentile := float64(le) / float64(valid) * 100
-		name := "VOL HIGH >67P"
-		if percentile <= 33 {
-			name = "VOL LOW <=33P"
-		} else if percentile <= 67 {
-			name = "VOL MID 33-67P"
-		}
 		riskATR := 0.0
 		if atrPct > 0 { riskATR = t.RiskPct / atrPct }
-		groups[name] = append(groups[name], btcVolatilityObservation{
-			trade: t, atrPct: atrPct, percentile: percentile, riskATR: riskATR,
-		})
+		o := btcVolatilityObservation{trade:t, atrPct:atrPct, percentile:percentile, riskATR:riskATR}
+
+		volName := "VOL HIGH >67P"
+		if percentile <= 33 {
+			volName = "VOL LOW <=33P"
+		} else if percentile <= 67 {
+			volName = "VOL MID 33-67P"
+		}
+		volGroups[volName] = append(volGroups[volName], o)
+
+		riskName := "RISKATR >6"
+		if riskATR <= 3 {
+			riskName = "RISKATR <=3"
+		} else if riskATR <= 6 {
+			riskName = "RISKATR 3-6"
+		}
+		riskATRGroups[riskName] = append(riskATRGroups[riskName], o)
 	}
 
-	order := []string{"VOL LOW <=33P", "VOL MID 33-67P", "VOL HIGH >67P"}
-	out := make([]BTCVolatilityBucket, 0, len(order))
-	for _, name := range order {
-		out = append(out, summarizeBTCVolatilityBucket(name, groups[name]))
+	out := make([]BTCVolatilityBucket, 0, 6)
+	for _, name := range []string{"VOL LOW <=33P", "VOL MID 33-67P", "VOL HIGH >67P"} {
+		out = append(out, summarizeBTCVolatilityBucket(name, volGroups[name]))
+	}
+	for _, name := range []string{"RISKATR <=3", "RISKATR 3-6", "RISKATR >6"} {
+		out = append(out, summarizeBTCVolatilityBucket(name, riskATRGroups[name]))
 	}
 	return out
 }
