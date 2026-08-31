@@ -1,0 +1,135 @@
+# BTCUSDT / 15M automated master report
+# generated_utc: 2026-08-31T10:26:31Z
+# git_commit_before_report: 857299b4351e0f9b0dbf650f2e17ddbdf5f9b08f
+# days: 3300
+# end: 2026-08-31
+# fee_bps_per_side: 10
+# slippage_bps_per_side: 5
+
+
+BTC MASTER REPORT — frozen B profile
+Window end: 2026-08-31 | days 3300 | bars 316181 | V3 structures 105
+Entry: MIDPOINT + prospective HL decision -> NEXT 15M OPEN
+Stop: lowest Test-to-decision low - 0.25 Spring ATR | Target benchmark: 3R | Max hold: 16h
+Costs: fee 10.0 bps/side + slippage 5.0 bps/side | regime: 30D return >+10% BULL, <-10% BEAR, else SIDEWAYS
+
+Signal funnel (descriptive only; rules unchanged):
+V3 105 -> foundation 105 -> Test 105 -> midpoint 105 -> B decision<=8 bars 23 -> next-open history 23 -> valid entry/stop 23 -> trades 23
+No B decision within 8 bars: 82 of 105 midpoint-valid structures
+
+B decision selection check (descriptive; common V3 next-open anchor):
+Accepted/rejected label may use the next 8 candles; this section is NOT a tradable V3-time filter.
+B_ACCEPTED   n= 23 | 16h win 60.9% avg +0.919% | MFE +5.16% MAE -3.46%
+B_REJECTED   n= 82 | 16h win 46.3% avg -0.544% | MFE +3.51% MAE -6.10%
+
+B decision selection by year (same common V3 next-open anchor):
+2017:
+  B_ACCEPTED   n=  5 | 16h win 40.0% avg -1.979% | MFE +4.44% MAE -5.27%
+  B_REJECTED   n= 15 | 16h win 40.0% avg -0.939% | MFE +4.80% MAE -10.28%
+2018:
+  B_ACCEPTED   n=  7 | 16h win 57.1% avg +0.409% | MFE +4.60% MAE -2.70%
+  B_REJECTED   n= 18 | 16h win 38.9% avg -2.276% | MFE +3.29% MAE -7.22%
+2019:
+  B_ACCEPTED   n=  2 | 16h win 50.0% avg +0.169% | MFE +2.35% MAE -4.08%
+  B_REJECTED   n=  4 | 16h win 25.0% avg -1.608% | MFE +4.03% MAE -6.30%
+2020:
+  B_REJECTED   n= 12 | 16h win 58.3% avg +1.803% | MFE +3.97% MAE -2.07%
+2021:
+  B_ACCEPTED   n=  5 | 16h win 80.0% avg +1.591% | MFE +6.64% MAE -4.67%
+  B_REJECTED   n= 17 | 16h win 41.2% avg -0.989% | MFE +2.70% MAE -6.24%
+2022:
+  B_ACCEPTED   n=  1 | 16h win 100.0% avg +7.866% | MFE +12.55% MAE -0.42%
+  B_REJECTED   n=  9 | 16h win 66.7% avg +0.917% | MFE +3.35% MAE -3.90%
+2023:
+  B_REJECTED   n=  1 | 16h win 100.0% avg +0.585% | MFE +0.75% MAE -3.76%
+2024:
+  B_ACCEPTED   n=  1 | 16h win 100.0% avg +1.815% | MFE +2.04% MAE -1.48%
+  B_REJECTED   n=  2 | 16h win 0.0% avg -1.780% | MFE +0.50% MAE -4.59%
+2025:
+  B_REJECTED   n=  3 | 16h win 100.0% avg +3.480% | MFE +4.67% MAE -1.67%
+2026:
+  B_ACCEPTED   n=  2 | 16h win 50.0% avg +5.099% | MFE +5.85% MAE -0.43%
+  B_REJECTED   n=  1 | 16h win 0.0% avg -3.688% | MFE +1.05% MAE -6.91%
+
+B confirmation latency study (descriptive only; frozen rule remains <=8 bars):
+Groups show when the existing B condition first appears after the V3 signal. Outcomes use the same V3 next-open anchor.
+B_1_8        n= 23 | 16h win 60.9% avg +0.919% | MFE +5.16% MAE -3.46%
+B_9_16       n=  7 | 16h win 85.7% avg +3.940% | MFE +6.01% MAE -1.66%
+B_17_32      n=0
+NO_B_32      n= 75 | 16h win 42.7% avg -0.963% | MFE +3.28% MAE -6.51%
+
+BTC B timing execution comparison (CAUSAL next-open; <=16 is research only):
+Same B condition, post-Test stop, 3R target, 16h max hold and costs. The frozen <=8 rule is unchanged.
+B <=8 FROZEN       n= 23 | T/S/X 3/8/12 | net-win 47.8% | delay 3.87 | risk 4.14% | gross +0.388R net +0.269R
+B <=16 RESEARCH    n= 30 | T/S/X 3/11/16 | net-win 50.0% | delay 5.97 | risk 4.30% | gross +0.289R net +0.178R
+B 9-16 ONLY        n=  7 | T/S/X 0/3/4 | net-win 57.1% | delay 12.86 | risk 4.83% | gross -0.035R net -0.120R
+
+BTC 15M holding-horizon study (RESEARCH; frozen baseline remains 16H):
+Frozen <=8 B confirmation, next-open entry, post-Test stop, 3R target and same costs. Only max holding time changes.
+4H / 16 bars             n= 23 | T/S/X 1/5/17 | net-win 56.5% | gross +0.198R net +0.079R
+8H / 32 bars             n= 23 | T/S/X 1/6/16 | net-win 56.5% | gross +0.282R net +0.164R
+16H / 64 bars FROZEN     n= 23 | T/S/X 3/8/12 | net-win 47.8% | gross +0.388R net +0.269R
+24H / 96 bars            n= 23 | T/S/X 3/10/10 | net-win 43.5% | gross +0.291R net +0.172R
+32H / 128 bars           n= 23 | T/S/X 3/11/9 | net-win 39.1% | gross +0.096R net -0.022R
+
+BTC 15M target-distance study (RESEARCH; frozen baseline remains 3R):
+Frozen <=8 B confirmation, next-open entry, post-Test stop, 16H max hold and same costs. Only target distance changes.
+1R           n= 23 | T/S/X 13/5/5 | net-win 60.9% | gross +0.324R net +0.205R
+2R           n= 23 | T/S/X 5/8/10 | net-win 47.8% | gross +0.314R net +0.195R
+3R FROZEN    n= 23 | T/S/X 3/8/12 | net-win 47.8% | gross +0.388R net +0.269R
+4R           n= 23 | T/S/X 1/8/14 | net-win 47.8% | gross +0.368R net +0.249R
+
+BTC 15M frozen-stop diagnostic (DESCRIPTIVE; stop unchanged):
+For stopped trades only: did BTC later recover within the original 16H window after the frozen stop had already been hit?
+stops n=8 | avg stop 23.5 bars | MFE before stop 0.76R | max recovery after stop -0.03R avg
+after stop: recovered entry 2/8 | later touched 1R 2 | 2R 0 | 3R 0
+
+BTC 15M structural-risk diagnostic (DESCRIPTIVE; no risk filter):
+Exact frozen trades grouped by broad entry-to-stop distance. This measures geometry/cost behavior; it does NOT set a max-risk rule.
+RISK <=2%    n=  7 | T/S/X 1/2/4 | net-win 57.1% | risk 1.48% | gross +0.536R net +0.329R cost 0.207R | 16h +0.86% | MFE +2.64% MAE -1.53%
+RISK 2-4%    n= 10 | T/S/X 2/4/4 | net-win 50.0% | risk 3.02% | gross +0.610R net +0.507R cost 0.103R | 16h +0.57% | MFE +5.51% MAE -4.89%
+RISK 4-6%    n=  3 | T/S/X 0/2/1 | net-win 0.0% | risk 5.03% | gross -0.783R net -0.844R cost 0.061R | 16h -5.74% | MFE +1.41% MAE -9.71%
+RISK >6%     n=  3 | T/S/X 0/0/3 | net-win 66.7% | risk 13.22% | gross +0.471R net +0.445R cost 0.026R | 16h +4.29% | MFE +7.94% MAE -2.90%
+
+Overall:
+ALL          n= 23 | T/S/X 3/8/12 | net-win 47.8% | gross +0.388R net +0.269R | 16h +0.322% | MFE +4.42% MAE -4.24% | risk 4.14% | exit 46.5 bars
+
+By year:
+2017         n=  5 | T/S/X 0/2/3 | net-win 40.0% | gross -0.200R net -0.280R | 16h -1.783% | MFE +4.55% MAE -5.23% | risk 8.27% | exit 52.0 bars
+2018         n=  7 | T/S/X 0/3/4 | net-win 42.9% | gross +0.049R net -0.086R | 16h -0.631% | MFE +3.44% MAE -3.96% | risk 2.62% | exit 50.0 bars
+2019         n=  2 | T/S/X 0/1/1 | net-win 0.0% | gross -0.675R net -0.776R | 16h -0.487% | MFE +1.86% MAE -4.54% | risk 3.88% | exit 34.5 bars
+2021         n=  5 | T/S/X 1/1/3 | net-win 80.0% | gross +1.221R net +1.100R | 16h +0.886% | MFE +5.26% MAE -5.81% | risk 3.57% | exit 47.0 bars
+2022         n=  1 | T/S/X 1/0/0 | net-win 100.0% | gross +3.000R net +2.863R | 16h +6.331% | MFE +11.39% MAE -1.44% | risk 2.20% | exit 13.0 bars
+2024         n=  1 | T/S/X 0/1/0 | net-win 0.0% | gross -1.000R net -1.266R | 16h +1.298% | MFE +2.22% MAE -2.17% | risk 1.13% | exit 14.0 bars
+2026         n=  2 | T/S/X 1/0/1 | net-win 50.0% | gross +1.408R net +1.319R | 16h +4.820% | MFE +5.59% MAE -0.93% | risk 3.35% | exit 64.0 bars
+
+By 30D regime (descriptive only; NOT a filter):
+BEAR_30D     n=  9 | T/S/X 3/3/3 | net-win 55.6% | gross +0.829R net +0.703R | 16h +0.927% | MFE +4.85% MAE -3.23% | risk 2.71% | exit 44.3 bars
+SIDEWAYS_30D n=  5 | T/S/X 0/2/3 | net-win 40.0% | gross +0.138R net -0.046R | 16h +1.865% | MFE +2.94% MAE -2.42% | risk 1.90% | exit 42.2 bars
+BULL_30D     n=  8 | T/S/X 0/2/6 | net-win 50.0% | gross +0.220R net +0.148R | 16h -0.991% | MFE +4.94% MAE -6.37% | risk 7.30% | exit 50.9 bars
+UNKNOWN      n=  1 | T/S/X 0/1/0 | net-win 0.0% | gross -1.000R net -1.100R | 16h -2.349% | MFE +3.81% MAE -5.36% | risk 2.99% | exit 52.0 bars
+
+Trades:
+2017-09-03 00:15 | UNKNOWN     30D +0.0% | risk 2.99% | STOP   exit 52 bars | gross -1.000R net -1.100R | 16h -2.35% | MFE +3.81% MAE -5.36%
+2017-10-22 14:15 | BULL_30D    30D +61.9% | risk 1.47% | TIME   exit 64 bars | gross +0.666R net +0.462R | 16h +0.98% | MFE +3.50% MAE -0.72%
+2017-12-01 15:30 | BULL_30D    30D +59.9% | risk 12.96% | TIME   exit 64 bars | gross +0.349R net +0.326R | 16h +4.53% | MFE +5.96% MAE -1.16%
+2017-12-11 13:00 | BULL_30D    30D +158.3% | risk 18.66% | TIME   exit 64 bars | gross -0.018R net -0.034R | 16h -0.33% | MFE +7.05% MAE -1.95%
+2017-12-29 22:00 | BULL_30D    30D +49.8% | risk 5.28% | STOP   exit 16 bars | gross -1.000R net -1.057R | 16h -11.75% | MFE +2.40% MAE -16.96%
+2018-01-14 16:30 | BEAR_30D    30D -26.3% | risk 3.48% | TIME   exit 64 bars | gross +0.655R net +0.569R | 16h +2.28% | MFE +5.02% MAE -1.37%
+2018-01-21 23:45 | BEAR_30D    30D -18.9% | risk 3.01% | STOP   exit 53 bars | gross -1.000R net -1.100R | 16h -8.81% | MFE +5.28% MAE -10.49%
+2018-03-09 10:30 | BULL_30D    30D +23.4% | risk 3.19% | TIME   exit 64 bars | gross +2.033R net +1.939R | 16h +6.49% | MFE +8.18% MAE -1.38%
+2018-03-30 08:00 | BEAR_30D    30D -33.0% | risk 4.06% | STOP   exit 11 bars | gross -1.000R net -1.074R | 16h -3.45% | MFE +0.97% MAE -8.61%
+2018-06-11 17:45 | BEAR_30D    30D -19.6% | risk 1.63% | TIME   exit 64 bars | gross +0.993R net +0.809R | 16h +1.62% | MFE +2.79% MAE -1.13%
+2018-09-07 20:45 | SIDEWAYS_30D 30D +1.9% | risk 1.55% | TIME   exit 64 bars | gross -0.339R net -0.533R | 16h -0.52% | MFE +0.57% MAE -1.33%
+2018-12-05 08:45 | BEAR_30D    30D -40.1% | risk 1.39% | STOP   exit 30 bars | gross -1.000R net -1.215R | 16h -2.02% | MFE +1.28% MAE -3.39%
+2019-07-17 00:45 | SIDEWAYS_30D 30D +4.8% | risk 2.01% | STOP   exit  5 bars | gross -1.000R net -1.150R | 16h +1.04% | MFE +2.86% MAE -5.51%
+2019-10-28 04:30 | BULL_30D    30D +17.4% | risk 5.75% | TIME   exit 64 bars | gross -0.350R net -0.402R | 16h -2.01% | MFE +0.86% MAE -3.57%
+2021-01-10 22:15 | BULL_30D    30D +116.0% | risk 3.08% | STOP   exit  7 bars | gross -1.000R net -1.097R | 16h -14.52% | MFE +0.72% MAE -19.64%
+2021-01-11 17:45 | BULL_30D    30D +79.2% | risk 8.04% | TIME   exit 64 bars | gross +1.080R net +1.043R | 16h +8.68% | MFE +10.80% MAE -5.57%
+2021-04-07 21:45 | SIDEWAYS_30D 30D +8.7% | risk 1.33% | TIME   exit 64 bars | gross +1.431R net +1.205R | 16h +1.90% | MFE +2.39% MAE -1.18%
+2021-06-22 16:15 | SIDEWAYS_30D 30D +1.0% | risk 3.51% | TIME   exit 64 bars | gross +1.597R net +1.512R | 16h +5.61% | MFE +6.65% MAE -1.90%
+2021-06-24 09:00 | BEAR_30D    30D -12.4% | risk 1.87% | TARGET exit 36 bars | gross +3.000R net +2.840R | 16h +2.75% | MFE +5.72% MAE -0.76%
+2022-01-24 14:45 | BEAR_30D    30D -33.6% | risk 2.20% | TARGET exit 13 bars | gross +3.000R net +2.863R | 16h +6.33% | MFE +11.39% MAE -1.44%
+2024-04-16 06:45 | SIDEWAYS_30D 30D -3.1% | risk 1.13% | STOP   exit 14 bars | gross -1.000R net -1.266R | 16h +1.30% | MFE +2.22% MAE -2.17%
+2026-02-06 01:15 | BEAR_30D    30D -30.5% | risk 3.33% | TARGET exit 64 bars | gross +3.000R net +2.910R | 16h +10.26% | MFE +10.38% MAE -0.86%
+2026-06-27 09:00 | BEAR_30D    30D -17.5% | risk 3.37% | TIME   exit 64 bars | gross -0.183R net -0.272R | 16h -0.62% | MFE +0.80% MAE -0.99%
