@@ -1,4 +1,4 @@
-.PHONY: all build build-frontend build-all test test-coverage lint run docker-build docker-up docker-down docker-logs clean
+.PHONY: all build build-frontend build-all test test-coverage lint run docker-build docker-up docker-down docker-logs clean btc-master-auto
 
 BINARY  := ./chart-analyzer
 WEB_DIR := ./web
@@ -25,6 +25,9 @@ lint:
 
 run: build
 	$(BINARY)
+
+btc-master-auto:
+	bash ./scripts/btc-master-auto.sh
 
 docker-build: build-frontend
 	docker build -t ChartAnalysis:latest .
