@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-08-31T11:15:33Z
-# git_commit_before_report: ad816ff0e9d67bf8bc9caefc3284d578a722d2dc
+# generated_utc: 2026-08-31T11:25:42Z
+# git_commit_before_report: 4453443ec472fe1795c7efd7c58951fd842f9693
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -161,3 +161,18 @@ Fixed calendar blocks: 2017-2019, 2020-2022, 2023-2025, and 2026 partial. No per
 2020-2022    n= 6 | net-win 83.3% | total +8.366R avg +1.394R median +1.359R | PF 8.63 | max DD 1.097R | max losses 1
 2023-2025    n= 1 | net-win 0.0% | total -1.266R avg -1.266R median -1.266R | PF 0.00 | max DD 1.266R | max losses 1
 2026 PARTIAL n= 2 | net-win 50.0% | total +2.638R avg +1.319R median +1.319R | PF 10.70 | max DD 0.272R | max losses 1
+
+BTC 15M B-selection by fixed era (DESCRIPTIVE; no era/B filter):
+Aggregates the existing common-anchor V3 cohorts. ACCEPTED/REJECTED classification can look up to 8 bars ahead and is descriptive only.
+2017-2019    V3 cohorts  51 | B accepted 14 (27.5%) | rejected 37
+  ACCEPTED   n=14 | 16h win 50.0% avg -0.478% | MFE +4.22% MAE -3.81%
+  REJECTED   n=37 | 16h win 37.8% avg -1.662% | MFE +3.98% MAE -8.36%
+2020-2022    V3 cohorts  44 | B accepted  6 (13.6%) | rejected 38
+  ACCEPTED   n= 6 | 16h win 83.3% avg +2.637% | MFE +7.62% MAE -3.96%
+  REJECTED   n=38 | 16h win 52.6% avg +0.344% | MFE +3.26% MAE -4.37%
+2023-2025    V3 cohorts   7 | B accepted  1 (14.3%) | rejected  6
+  ACCEPTED   n= 1 | 16h win 100.0% avg +1.815% | MFE +2.04% MAE -1.48%
+  REJECTED   n= 6 | 16h win 66.7% avg +1.244% | MFE +2.63% MAE -2.99%
+2026 PARTIAL V3 cohorts   3 | B accepted  2 (66.7%) | rejected  1
+  ACCEPTED   n= 2 | 16h win 50.0% avg +5.099% | MFE +5.85% MAE -0.43%
+  REJECTED   n= 1 | 16h win 0.0% avg -3.688% | MFE +1.05% MAE -6.91%
