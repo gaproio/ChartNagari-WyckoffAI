@@ -60,8 +60,8 @@ func TestAnalyzeV3FoundationDetectsQualitySpringAndTest(t *testing.T) {
 	add(101.5, 104, 101, 103.5, 120)
 	add(103.5, 109, 103, 108, 125)                  // AR
 	add(108, 108.5, 103, 104, 95)
-	add(104, 105, 100.0, 102, 88)                   // ST
-	add(102, 105, 101, 104, 92)
+	add(104, 104.5, 98.6, 101.5, 88)                // ST: near support, does not break it materially
+	add(101.5, 105, 101, 104, 92)
 	add(104, 104.5, 97.2, 103.5, 150)               // Spring: controlled break + rejection
 	add(103.5, 105, 101.0, 104, 90)
 	add(104, 104.5, 99.0, 102.5, 65)                // Test: holds spring, lower vol/spread
