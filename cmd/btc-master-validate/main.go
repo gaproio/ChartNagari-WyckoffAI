@@ -41,6 +41,7 @@ func main() {
 	cfg.SlippageBpsPerSide = *slipBps
 	report := wyckoff.ValidateBTCMaster(bars,v3,cfg)
 	latency := wyckoff.ValidateBTCMasterLatency(bars,v3)
+	timingVariants := wyckoff.ValidateBTCTimingVariants(bars,v3,cfg)
 
 	fmt.Println("\nBTC MASTER REPORT — frozen B profile")
 	fmt.Printf("Window end: %s | days %d | bars %d | V3 structures %d\n",end.Format("2006-01-02"),*days,len(bars),len(v3.Events))
@@ -73,6 +74,10 @@ func main() {
 	fmt.Println("Groups show when the existing B condition first appears after the V3 signal. Outcomes use the same V3 next-open anchor.")
 	for _,b := range latency { printLatencyBucket(b) }
 
+	fmt.Println("\nBTC B timing execution comparison (CAUSAL next-open; <=16 is research only):")
+	fmt.Println("Same B condition, post-Test stop, 3R target, 16h max hold and costs. The frozen <=8 rule is unchanged.")
+	for _,r := range timingVariants { printTimingVariant(r) }
+
 	fmt.Println("\nOverall:")
 	printBucket(report.Overall)
 	fmt.Println("\nBy year:")
@@ -97,6 +102,12 @@ func printLatencyBucket(b wyckoff.BTCMasterLatencyBucket) {
 	if b.Structures == 0 { fmt.Printf("%-12s n=0\n",b.Name); return }
 	fmt.Printf("%-12s n=%3d | 16h win %.1f%% avg %+.3f%% | MFE %+.2f%% MAE %+.2f%%\n",
 		b.Name,b.Structures,b.WinRate16H,b.AvgReturn16H,b.AvgMFE16H,b.AvgMAE16H)
+}
+
+func printTimingVariant(r wyckoff.BTCTimingVariantResult) {
+	if r.Entries == 0 { fmt.Printf("%-18s n=0\n",r.Name); return }
+	fmt.Printf("%-18s n=%3d | T/S/X %d/%d/%d | net-win %.1f%% | delay %.2f | risk %.2f%% | gross %+.3fR net %+.3fR\n",
+		r.Name,r.Entries,r.TargetHits,r.StopHits,r.TimeExits,r.NetWinRate,r.AvgDelayBars,r.AvgRiskPct,r.AvgGrossR,r.AvgNetR)
 }
 
 func printBucket(b wyckoff.BTCMasterBucket) {
