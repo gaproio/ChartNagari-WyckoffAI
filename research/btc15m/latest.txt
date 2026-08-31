@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-08-31T10:52:15Z
-# git_commit_before_report: bc57e36a90a06ecdfa7882e4b1aef5fb35956c88
+# generated_utc: 2026-08-31T11:04:42Z
+# git_commit_before_report: ecb1831ebeb333f88f7f5c2092cc126172c2a5af
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -8,7 +8,7 @@
 
 
 BTC MASTER REPORT — frozen B profile
-Window end: 2026-08-31 | days 3300 | bars 316183 | V3 structures 105
+Window end: 2026-08-31 | days 3300 | bars 316184 | V3 structures 105
 Entry: MIDPOINT + prospective HL decision -> NEXT 15M OPEN
 Stop: lowest Test-to-decision low - 0.25 Spring ATR | Target benchmark: 3R | Max hold: 16h
 Costs: fee 10.0 bps/side + slippage 5.0 bps/side | regime: 30D return >+10% BULL, <-10% BEAR, else SIDEWAYS
