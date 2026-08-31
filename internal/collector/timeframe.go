@@ -9,10 +9,11 @@ import (
 
 // tfDuration maps timeframe string to its duration.
 var tfDuration = map[string]time.Duration{
-	"1H": time.Hour,
-	"4H": 4 * time.Hour,
-	"1D": 24 * time.Hour,
-	"1W": 7 * 24 * time.Hour,
+	"15M": 15 * time.Minute,
+	"1H":  time.Hour,
+	"4H":  4 * time.Hour,
+	"1D":  24 * time.Hour,
+	"1W":  7 * 24 * time.Hour,
 }
 
 // RebuildHigherTF aggregates 1H bars into 4H, 1D, 1W bars.
@@ -94,8 +95,9 @@ func floorTime(t time.Time, d time.Duration) time.Time {
 
 // BinanceTFMap maps our internal TF strings to Binance kline interval strings.
 var BinanceTFMap = map[string]string{
-	"1H": "1h",
-	"4H": "4h",
-	"1D": "1d",
-	"1W": "1w",
+	"15M": "15m",
+	"1H":  "1h",
+	"4H":  "4h",
+	"1D":  "1d",
+	"1W":  "1w",
 }
