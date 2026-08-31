@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-08-31T10:36:25Z
-# git_commit_before_report: 3123c82e8c4a49df2d848b992f6eafab7c8ee488
+# generated_utc: 2026-08-31T10:41:50Z
+# git_commit_before_report: 765c8100e7979a776a5bb516792bc8886054109b
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -90,6 +90,12 @@ RISK <=2%    n=  7 | T/S/X 1/2/4 | net-win 57.1% | risk 1.48% | gross +0.536R ne
 RISK 2-4%    n= 10 | T/S/X 2/4/4 | net-win 50.0% | risk 3.02% | gross +0.610R net +0.507R cost 0.103R | 16h +0.57% | MFE +5.51% MAE -4.89%
 RISK 4-6%    n=  3 | T/S/X 0/2/1 | net-win 0.0% | risk 5.03% | gross -0.783R net -0.844R cost 0.061R | 16h -5.74% | MFE +1.41% MAE -9.71%
 RISK >6%     n=  3 | T/S/X 0/0/3 | net-win 66.7% | risk 13.22% | gross +0.471R net +0.445R cost 0.026R | 16h +4.29% | MFE +7.94% MAE -2.90%
+
+BTC 15M volatility-normalized diagnostic (DESCRIPTIVE; no volatility filter):
+Frozen trades grouped by causal 14-bar ATR%% percentile versus the prior 30 days. Terciles are fixed and normalize different BTC eras.
+VOL LOW <=33P    n=  2 | T/S/X 0/1/1 | net-win 0.0% | ATR 0.596% pctile 23.2 | risk 4.32% = 11.41 ATR | net -0.665R | 16h -6.18% | MFE +1.60% MAE -8.98%
+VOL MID 33-67P   n=  6 | T/S/X 1/2/3 | net-win 33.3% | ATR 0.804% pctile 52.5 | risk 4.64% = 5.21 ATR | net +0.194R | 16h -1.17% | MFE +3.72% MAE -3.18%
+VOL HIGH >67P    n= 15 | T/S/X 2/5/8 | net-win 60.0% | ATR 1.626% pctile 90.9 | risk 3.92% = 2.51 ATR | net +0.423R | 16h +1.79% | MFE +5.07% MAE -4.03%
 
 Overall:
 ALL          n= 23 | T/S/X 3/8/12 | net-win 47.8% | gross +0.388R net +0.269R | 16h +0.322% | MFE +4.42% MAE -4.24% | risk 4.14% | exit 46.5 bars
