@@ -44,7 +44,7 @@ btc-research-loop-uninstall:
 docker-build: build-frontend
 	docker build -t ChartAnalysis:latest .
 
-docker-up: build-frontend
+docker-up:
 	docker compose up -d
 
 docker-down:
