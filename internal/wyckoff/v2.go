@@ -60,6 +60,7 @@ type V2Analysis struct {
 	HasSpring    bool         `json:"has_spring"`
 	HasTest      bool         `json:"has_test"`
 	HasSOS       bool         `json:"has_sos"`
+	HasLPS       bool         `json:"has_lps"`
 	ReadyForLong bool         `json:"ready_for_long"`
 }
 
@@ -228,6 +229,7 @@ func AnalyzeV2(symbol, timeframe string, input []models.OHLCV) V2Analysis {
 	}
 	if lps >= 0 {
 		out.Events = append(out.Events, v2Event(V2EventLPS, lps, bars, volMA))
+		out.HasLPS = true
 		out.Confidence = 0.97
 	}
 
