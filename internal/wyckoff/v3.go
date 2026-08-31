@@ -116,7 +116,10 @@ func AnalyzeV3Foundation(symbol, timeframe string, input []models.OHLCV) V3Analy
 		if atr[i] <= 0 { continue }
 		tolerance := math.Max(0.35*atr[i], (resistance-support)*0.06)
 		nearSupport := bars[i].Low <= support+tolerance
-		holdsSC := bars[i].Low >= support-0.35*atr[i]
+		// An ST may marginally probe the SC support, but a meaningful break is
+		// reserved for the later Spring stage. This prevents the Spring candle
+		// itself from being consumed as the ST.
+		holdsSC := bars[i].Low >= support-0.10*atr[i]
 		lessEffort := bars[i].Volume < bars[sc].Volume
 		if nearSupport && holdsSC && lessEffort && bars[i].Close >= support-tolerance { st = i; break }
 	}
