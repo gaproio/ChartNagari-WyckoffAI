@@ -9,6 +9,7 @@ FEE_BPS="${BTC_MASTER_FEE_BPS:-10}"
 SLIPPAGE_BPS="${BTC_MASTER_SLIPPAGE_BPS:-5}"
 REPORT_DIR="research/btc15m"
 REPORT_FILE="${REPORT_DIR}/latest.txt"
+ERROR_FILE="${REPORT_DIR}/latest_error.txt"
 
 if ! git rev-parse --show-toplevel >/dev/null 2>&1; then
   echo "Run this command from inside the ChartNagari repository."
@@ -63,10 +64,13 @@ mv "$TMP_FILE" "$REPORT_FILE"
 trap - EXIT
 
 git add "$REPORT_FILE"
+if git ls-files --error-unmatch "$ERROR_FILE" >/dev/null 2>&1; then
+  git rm -f "$ERROR_FILE"
+fi
 
-if git diff --cached --quiet -- "$REPORT_FILE"; then
+if git diff --cached --quiet; then
   echo
-echo "Report is unchanged; nothing to commit."
+  echo "Report is unchanged; nothing to commit."
   echo "Saved at: $REPORT_FILE"
   exit 0
 fi
@@ -77,4 +81,4 @@ git push "$REMOTE" "HEAD:$BRANCH"
 echo
 echo "BTCUSDT / 15M report published successfully."
 echo "GitHub path: $REPORT_FILE"
-echo "You can now tell ChatGPT: done"
+echo "Autonomous loop can now consume this report."
