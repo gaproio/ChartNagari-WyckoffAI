@@ -42,6 +42,7 @@ func main() {
 	report := wyckoff.ValidateBTCMaster(bars,v3,cfg)
 	latency := wyckoff.ValidateBTCMasterLatency(bars,v3)
 	timingVariants := wyckoff.ValidateBTCTimingVariants(bars,v3,cfg)
+	holdVariants := wyckoff.ValidateBTCHoldVariants(bars,v3,cfg)
 
 	fmt.Println("\nBTC MASTER REPORT — frozen B profile")
 	fmt.Printf("Window end: %s | days %d | bars %d | V3 structures %d\n",end.Format("2006-01-02"),*days,len(bars),len(v3.Events))
@@ -78,6 +79,10 @@ func main() {
 	fmt.Println("Same B condition, post-Test stop, 3R target, 16h max hold and costs. The frozen <=8 rule is unchanged.")
 	for _,r := range timingVariants { printTimingVariant(r) }
 
+	fmt.Println("\nBTC 15M holding-horizon study (RESEARCH; frozen baseline remains 16H):")
+	fmt.Println("Frozen <=8 B confirmation, next-open entry, post-Test stop, 3R target and same costs. Only max holding time changes.")
+	for _,r := range holdVariants { printHoldVariant(r) }
+
 	fmt.Println("\nOverall:")
 	printBucket(report.Overall)
 	fmt.Println("\nBy year:")
@@ -108,6 +113,12 @@ func printTimingVariant(r wyckoff.BTCTimingVariantResult) {
 	if r.Entries == 0 { fmt.Printf("%-18s n=0\n",r.Name); return }
 	fmt.Printf("%-18s n=%3d | T/S/X %d/%d/%d | net-win %.1f%% | delay %.2f | risk %.2f%% | gross %+.3fR net %+.3fR\n",
 		r.Name,r.Entries,r.TargetHits,r.StopHits,r.TimeExits,r.NetWinRate,r.AvgDelayBars,r.AvgRiskPct,r.AvgGrossR,r.AvgNetR)
+}
+
+func printHoldVariant(r wyckoff.BTCHoldVariantResult) {
+	if r.Entries == 0 { fmt.Printf("%-24s n=0\n",r.Name); return }
+	fmt.Printf("%-24s n=%3d | T/S/X %d/%d/%d | net-win %.1f%% | gross %+.3fR net %+.3fR\n",
+		r.Name,r.Entries,r.TargetHits,r.StopHits,r.TimeExits,r.NetWinRate,r.AvgGrossR,r.AvgNetR)
 }
 
 func printBucket(b wyckoff.BTCMasterBucket) {
