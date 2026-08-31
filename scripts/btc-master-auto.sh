@@ -64,6 +64,10 @@ trap 'rm -f "$TMP_FILE"' EXIT
 mv "$TMP_FILE" "$REPORT_FILE"
 trap - EXIT
 
+# Sequence/tail diagnostic parses the exact chronological trade lines already
+# printed above, so it adds no second market-data fetch and changes no rules.
+go run ./cmd/btc-sequence-report -file "$REPORT_FILE" | tee -a "$REPORT_FILE"
+
 git add "$REPORT_FILE"
 if git ls-files --error-unmatch "$ERROR_FILE" >/dev/null 2>&1; then
   git rm -f "$ERROR_FILE"
@@ -84,7 +88,7 @@ else
 fi
 
 # Fast mode: when this script is run manually in an interactive terminal,
-# best-effort notify the currently open ChatGPT Chrome tab by sending "done".
+# best-effort notify the front ChatGPT Brave/Chrome tab by sending "done".
 # Background launchd/poller runs are piped/non-interactive, so auto mode skips.
 SHOULD_NOTIFY=0
 NOTIFY_NORMALIZED="$(printf '%s' "$NOTIFY_CHATGPT" | tr '[:upper:]' '[:lower:]')"
