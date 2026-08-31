@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-08-31T10:41:50Z
-# git_commit_before_report: 765c8100e7979a776a5bb516792bc8886054109b
+# generated_utc: 2026-08-31T10:52:15Z
+# git_commit_before_report: bc57e36a90a06ecdfa7882e4b1aef5fb35956c88
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -8,7 +8,7 @@
 
 
 BTC MASTER REPORT — frozen B profile
-Window end: 2026-08-31 | days 3300 | bars 316182 | V3 structures 105
+Window end: 2026-08-31 | days 3300 | bars 316183 | V3 structures 105
 Entry: MIDPOINT + prospective HL decision -> NEXT 15M OPEN
 Stop: lowest Test-to-decision low - 0.25 Spring ATR | Target benchmark: 3R | Max hold: 16h
 Costs: fee 10.0 bps/side + slippage 5.0 bps/side | regime: 30D return >+10% BULL, <-10% BEAR, else SIDEWAYS
@@ -96,6 +96,9 @@ Frozen trades grouped by causal 14-bar ATR%% percentile versus the prior 30 days
 VOL LOW <=33P    n=  2 | T/S/X 0/1/1 | net-win 0.0% | ATR 0.596% pctile 23.2 | risk 4.32% = 11.41 ATR | net -0.665R | 16h -6.18% | MFE +1.60% MAE -8.98%
 VOL MID 33-67P   n=  6 | T/S/X 1/2/3 | net-win 33.3% | ATR 0.804% pctile 52.5 | risk 4.64% = 5.21 ATR | net +0.194R | 16h -1.17% | MFE +3.72% MAE -3.18%
 VOL HIGH >67P    n= 15 | T/S/X 2/5/8 | net-win 60.0% | ATR 1.626% pctile 90.9 | risk 3.92% = 2.51 ATR | net +0.423R | 16h +1.79% | MFE +5.07% MAE -4.03%
+RISKATR <=3      n= 17 | T/S/X 3/7/7 | net-win 58.8% | ATR 1.475% pctile 82.0 | risk 2.81% = 1.96 ATR | net +0.479R | 16h +1.06% | MFE +4.94% MAE -4.21%
+RISKATR 3-6      n=  3 | T/S/X 0/1/2 | net-win 0.0% | ATR 0.779% pctile 52.7 | risk 4.19% = 5.16 ATR | net -0.664R | 16h -4.76% | MFE +1.28% MAE -7.28%
+RISKATR >6       n=  3 | T/S/X 0/0/3 | net-win 33.3% | ATR 0.996% pctile 57.6 | risk 11.67% = 14.31 ATR | net +0.007R | 16h +1.19% | MFE +4.61% MAE -1.37%
 
 Overall:
 ALL          n= 23 | T/S/X 3/8/12 | net-win 47.8% | gross +0.388R net +0.269R | 16h +0.322% | MFE +4.42% MAE -4.24% | risk 4.14% | exit 46.5 bars
