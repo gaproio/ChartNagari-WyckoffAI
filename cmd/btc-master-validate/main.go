@@ -40,6 +40,7 @@ func main() {
 	cfg.FeeBpsPerSide = *feeBps
 	cfg.SlippageBpsPerSide = *slipBps
 	report := wyckoff.ValidateBTCMaster(bars,v3,cfg)
+	latency := wyckoff.ValidateBTCMasterLatency(bars,v3)
 
 	fmt.Println("\nBTC MASTER REPORT — frozen B profile")
 	fmt.Printf("Window end: %s | days %d | bars %d | V3 structures %d\n",end.Format("2006-01-02"),*days,len(bars),len(v3.Events))
@@ -68,6 +69,10 @@ func main() {
 		printStructureCohort(b)
 	}
 
+	fmt.Println("\nB confirmation latency study (descriptive only; frozen rule remains <=8 bars):")
+	fmt.Println("Groups show when the existing B condition first appears after the V3 signal. Outcomes use the same V3 next-open anchor.")
+	for _,b := range latency { printLatencyBucket(b) }
+
 	fmt.Println("\nOverall:")
 	printBucket(report.Overall)
 	fmt.Println("\nBy year:")
@@ -83,6 +88,12 @@ func main() {
 }
 
 func printStructureCohort(b wyckoff.BTCMasterStructureCohort) {
+	if b.Structures == 0 { fmt.Printf("%-12s n=0\n",b.Name); return }
+	fmt.Printf("%-12s n=%3d | 16h win %.1f%% avg %+.3f%% | MFE %+.2f%% MAE %+.2f%%\n",
+		b.Name,b.Structures,b.WinRate16H,b.AvgReturn16H,b.AvgMFE16H,b.AvgMAE16H)
+}
+
+func printLatencyBucket(b wyckoff.BTCMasterLatencyBucket) {
 	if b.Structures == 0 { fmt.Printf("%-12s n=0\n",b.Name); return }
 	fmt.Printf("%-12s n=%3d | 16h win %.1f%% avg %+.3f%% | MFE %+.2f%% MAE %+.2f%%\n",
 		b.Name,b.Structures,b.WinRate16H,b.AvgReturn16H,b.AvgMFE16H,b.AvgMAE16H)
