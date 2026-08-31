@@ -35,23 +35,40 @@ func main() {
 
 	s := wyckoff.ValidateV2(strings.ToUpper(*symbol), bars)
 	fmt.Printf("\nWyckoff V2 validation — %s 15M\n", s.Symbol)
-	fmt.Printf("Bars: %d | Distinct triggers: %d\n", s.Bars, s.Triggers)
-	if s.Triggers == 0 {
+	fmt.Printf("Bars: %d | Unique ranges: %d | Stage triggers: %d\n", s.Bars, s.UniqueRanges, s.Overall.Triggers)
+	if s.Overall.Triggers == 0 {
 		fmt.Println("No qualifying V2 triggers found in this period.")
 		return
 	}
-	fmt.Printf("4h : win %.1f%% | avg return %+.3f%%\n", s.WinRate4H, s.AvgReturn4H)
-	fmt.Printf("8h : win %.1f%% | avg return %+.3f%%\n", s.WinRate8H, s.AvgReturn8H)
-	fmt.Printf("16h: win %.1f%% | avg return %+.3f%%\n", s.WinRate16H, s.AvgReturn16H)
-	fmt.Printf("16h avg MFE %+.3f%% | avg MAE %+.3f%%\n", s.AvgMFE16H, s.AvgMAE16H)
-	fmt.Println("\nRecent triggers:")
+
+	fmt.Println("\nOverall:")
+	printBucket(s.Overall)
+	fmt.Println("\nBy entry stage:")
+	for _, b := range s.ByStage { printBucket(b) }
+	fmt.Println("\nBy higher-timeframe context (close vs EMA50):")
+	for _, b := range s.ByHTF { printBucket(b) }
+
+	fmt.Println("\nRecent stage triggers:")
 	start := 0
-	if len(s.Events) > 10 { start = len(s.Events)-10 }
+	if len(s.Events) > 12 { start = len(s.Events)-12 }
 	for _, e := range s.Events[start:] {
-		fmt.Printf("%s | phase %s | conf %.0f%% | 4h %+.2f%% | 8h %+.2f%% | 16h %+.2f%%\n",
-			time.Unix(e.Time, 0).UTC().Format("2006-01-02 15:04 UTC"), e.Phase, e.Confidence*100,
-			e.Return4H, e.Return8H, e.Return16H)
+		fmt.Printf("%s | %-11s | phase %s | conf %.0f%% | 1H %s 4H %s | 4h %+.2f%% | 8h %+.2f%% | 16h %+.2f%%\n",
+			time.Unix(e.Time, 0).UTC().Format("2006-01-02 15:04 UTC"), e.Stage, e.Phase, e.Confidence*100,
+			e.HTF1H, e.HTF4H, e.Return4H, e.Return8H, e.Return16H)
 	}
+}
+
+func printBucket(b wyckoff.ValidationBucket) {
+	if b.Triggers == 0 {
+		fmt.Printf("%-12s n=%3d\n", b.Name, b.Triggers)
+		return
+	}
+	fmt.Printf("%-12s n=%3d | 4h %.1f%% %+.3f%% | 8h %.1f%% %+.3f%% | 16h %.1f%% %+.3f%% | MFE %+.3f%% MAE %+.3f%%\n",
+		b.Name, b.Triggers,
+		b.WinRate4H, b.AvgReturn4H,
+		b.WinRate8H, b.AvgReturn8H,
+		b.WinRate16H, b.AvgReturn16H,
+		b.AvgMFE16H, b.AvgMAE16H)
 }
 
 func fetch15M(symbol string, days int) ([]models.OHLCV, error) {
