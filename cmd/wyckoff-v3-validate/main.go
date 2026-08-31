@@ -45,14 +45,18 @@ func main() {
 	fmt.Println("\nTradeScore >= 0.65:")
 	for _,x:=range exec.Score65 { printExecution(x) }
 
-	confirm := wyckoff.ValidateV3Confirmation(bars,s)
+	conf := wyckoff.ValidateV3Confirmation(bars,s)
 	fmt.Println("\nConfirmation research — measured only, NOT used as a signal filter:")
 	fmt.Println("Overall:")
-	printConfirmation(confirm.Overall)
+	printConfirmation(conf.Overall)
 	fmt.Println("\nBy number of confirmation features present within next 8 candles:")
-	for _,b:=range confirm.ByFeature { printConfirmation(b) }
+	for _,b:=range conf.ByFeature { printConfirmation(b) }
 	fmt.Println("\nIndividual confirmation features:")
-	for _,b:=range confirm.Features { printConfirmation(b) }
+	for _,b:=range conf.Features { printConfirmation(b) }
+
+	v4 := wyckoff.ValidateV4Candidates(bars,s)
+	fmt.Println("\nV4 candidate rules — research comparison only, V3 detector unchanged:")
+	for _,r:=range v4.Candidates { printV4Candidate(r) }
 
 	fmt.Println("\nRecent V3 triggers:")
 	start:=0; if len(s.Events)>12 { start=len(s.Events)-12 }
@@ -84,6 +88,12 @@ func printConfirmation(b wyckoff.V3ConfirmationBucket) {
 	if b.Signals==0 { fmt.Printf("%-20s n=%3d\n",b.Name,b.Signals); return }
 	fmt.Printf("%-20s n=%3d | feat %.2f/6 | 16h win %.1f%% avg %+.3f%% | confirm %.1f%% | confirmed 3R avg %+.3fR\n",
 		b.Name,b.Signals,b.AvgFeatures,b.WinRate16H,b.AvgReturn16H,b.ConfirmRate,b.AvgConfirmedR3)
+}
+
+func printV4Candidate(r wyckoff.V4CandidateResult) {
+	if r.Signals==0 { fmt.Printf("%-24s n=%3d\n",r.Name,r.Signals); return }
+	fmt.Printf("%-24s n=%3d | 16h win %.1f%% avg %+.3f%% | confirm %3d (%.1f%%) | confirmed 3R avg %+.3fR\n",
+		r.Name,r.Signals,r.WinRate16H,r.AvgReturn16H,r.ConfirmedTrades,r.ConfirmRate,r.AvgConfirmedR3)
 }
 
 func fetch15M(symbol string, days int) ([]models.OHLCV,error) {
