@@ -44,6 +44,7 @@ func main() {
 	timingVariants := wyckoff.ValidateBTCTimingVariants(bars,v3,cfg)
 	holdVariants := wyckoff.ValidateBTCHoldVariants(bars,v3,cfg)
 	targetVariants := wyckoff.ValidateBTCTargetVariants(bars,v3,cfg)
+	stopDiag := wyckoff.ValidateBTCStopDiagnostic(bars,v3)
 
 	fmt.Println("\nBTC MASTER REPORT — frozen B profile")
 	fmt.Printf("Window end: %s | days %d | bars %d | V3 structures %d\n",end.Format("2006-01-02"),*days,len(bars),len(v3.Events))
@@ -88,6 +89,10 @@ func main() {
 	fmt.Println("Frozen <=8 B confirmation, next-open entry, post-Test stop, 16H max hold and same costs. Only target distance changes.")
 	for _,r := range targetVariants { printTargetVariant(r) }
 
+	fmt.Println("\nBTC 15M frozen-stop diagnostic (DESCRIPTIVE; stop unchanged):")
+	fmt.Println("For stopped trades only: did BTC later recover within the original 16H window after the frozen stop had already been hit?")
+	printStopDiagnostic(stopDiag)
+
 	fmt.Println("\nOverall:")
 	printBucket(report.Overall)
 	fmt.Println("\nBy year:")
@@ -130,6 +135,14 @@ func printTargetVariant(r wyckoff.BTCTargetVariantResult) {
 	if r.Entries == 0 { fmt.Printf("%-12s n=0\n",r.Name); return }
 	fmt.Printf("%-12s n=%3d | T/S/X %d/%d/%d | net-win %.1f%% | gross %+.3fR net %+.3fR\n",
 		r.Name,r.Entries,r.TargetHits,r.StopHits,r.TimeExits,r.NetWinRate,r.AvgGrossR,r.AvgNetR)
+}
+
+func printStopDiagnostic(r wyckoff.BTCStopDiagnostic) {
+	if r.StopTrades == 0 { fmt.Println("No stopped trades in this window."); return }
+	fmt.Printf("stops n=%d | avg stop %.1f bars | MFE before stop %.2fR | max recovery after stop %.2fR avg\n",
+		r.StopTrades,r.AvgBarsToStop,r.AvgMFEBeforeStopR,r.AvgRecoveryAfterR)
+	fmt.Printf("after stop: recovered entry %d/%d | later touched 1R %d | 2R %d | 3R %d\n",
+		r.RecoveredToEntry,r.StopTrades,r.Hit1RAfterStop,r.Hit2RAfterStop,r.Hit3RAfterStop)
 }
 
 func printBucket(b wyckoff.BTCMasterBucket) {
