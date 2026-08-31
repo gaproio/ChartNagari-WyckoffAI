@@ -87,7 +87,8 @@ fi
 # best-effort notify the currently open ChatGPT Chrome tab by sending "done".
 # Background launchd/poller runs are piped/non-interactive, so auto mode skips.
 SHOULD_NOTIFY=0
-case "${NOTIFY_CHATGPT,,}" in
+NOTIFY_NORMALIZED="$(printf '%s' "$NOTIFY_CHATGPT" | tr '[:upper:]' '[:lower:]')"
+case "$NOTIFY_NORMALIZED" in
   1|true|yes|on)
     SHOULD_NOTIFY=1
     ;;
