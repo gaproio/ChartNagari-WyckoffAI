@@ -7,11 +7,12 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"time"
 
 	"github.com/Ju571nK/Chatter/internal/wyckoff"
 )
 
-var tradeR = regexp.MustCompile(`^\d{4}-\d{2}-\d{2} .*\|.* gross ([+-]?[0-9]+(?:\.[0-9]+)?)R net ([+-]?[0-9]+(?:\.[0-9]+)?)R`)
+var tradeR = regexp.MustCompile(`^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}) .*\|.* gross ([+-]?[0-9]+(?:\.[0-9]+)?)R net ([+-]?[0-9]+(?:\.[0-9]+)?)R`)
 
 func main() {
 	path := flag.String("file", "research/btc15m/latest.txt", "BTC master text report")
@@ -28,11 +29,12 @@ func main() {
 	s := bufio.NewScanner(f)
 	for s.Scan() {
 		m := tradeR.FindStringSubmatch(s.Text())
-		if len(m) != 3 { continue }
-		grossR, err1 := strconv.ParseFloat(m[1], 64)
-		netR, err2 := strconv.ParseFloat(m[2], 64)
-		if err1 != nil || err2 != nil { continue }
-		report.Trades = append(report.Trades, wyckoff.BTCMasterTrade{GrossR: grossR, NetR: netR})
+		if len(m) != 4 { continue }
+		entryTime, err0 := time.ParseInLocation("2006-01-02 15:04", m[1], time.UTC)
+		grossR, err1 := strconv.ParseFloat(m[2], 64)
+		netR, err2 := strconv.ParseFloat(m[3], 64)
+		if err0 != nil || err1 != nil || err2 != nil { continue }
+		report.Trades = append(report.Trades, wyckoff.BTCMasterTrade{EntryTime: entryTime.Unix(), GrossR: grossR, NetR: netR})
 	}
 	if err := s.Err(); err != nil {
 		fmt.Fprintln(os.Stderr, "read report:", err)
@@ -54,5 +56,17 @@ func main() {
 	for _, r := range wyckoff.ValidateBTCCostSensitivity(report) {
 		fmt.Printf("%-16s n=%2d | net-win %.1f%% | total %+.3fR avg %+.3fR median %+.3fR | PF %.2f\n",
 			r.Name, r.Trades, r.NetWinRate, r.TotalNetR, r.AvgNetR, r.MedianNetR, r.ProfitFactor)
+	}
+
+	fmt.Println()
+	fmt.Println("BTC 15M temporal robustness diagnostic (DESCRIPTIVE; no era filter):")
+	fmt.Println("Fixed calendar blocks: 2017-2019, 2020-2022, 2023-2025, and 2026 partial. No period was chosen from performance.")
+	for _, r := range wyckoff.ValidateBTCTemporalRobustness(report) {
+		if r.Trades == 0 {
+			fmt.Printf("%-12s n=0\n", r.Name)
+			continue
+		}
+		fmt.Printf("%-12s n=%2d | net-win %.1f%% | total %+.3fR avg %+.3fR median %+.3fR | PF %.2f | max DD %.3fR | max losses %d\n",
+			r.Name, r.Trades, r.NetWinRate, r.TotalNetR, r.AvgNetR, r.MedianNetR, r.ProfitFactor, r.MaxDrawdownR, r.MaxConsecutiveLosses)
 	}
 }
