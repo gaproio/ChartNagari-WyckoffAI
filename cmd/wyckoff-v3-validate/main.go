@@ -33,14 +33,16 @@ func main() {
 
 	fmt.Println("\nOverall:")
 	printBucket(s.Overall)
+	fmt.Println("\nRisk/reward simulation (Test-close entry, stop = Spring low - 0.25 ATR, max hold 16h):")
+	printRisk(s.Overall)
 	fmt.Println("\nBy V3 trade-score threshold:")
-	for _,b:=range s.ByScore { printBucket(b) }
+	for _,b:=range s.ByScore { printBucket(b); printRisk(b) }
 
 	fmt.Println("\nRecent V3 triggers:")
 	start:=0; if len(s.Events)>12 { start=len(s.Events)-12 }
 	for _,e:=range s.Events[start:] {
-		fmt.Printf("%s | score %.3f | spring %.3f | test %.3f | structure %.0f%% | 4h %+.2f%% | 8h %+.2f%% | 16h %+.2f%%\n",
-			time.Unix(e.Time,0).UTC().Format("2006-01-02 15:04 UTC"),e.TradeScore,e.SpringQuality,e.TestQuality,e.StructureConf*100,e.Return4H,e.Return8H,e.Return16H)
+		fmt.Printf("%s | score %.3f | risk %.2f%% | R1 %+.2fR R2 %+.2fR R3 %+.2fR | 4h %+.2f%% | 8h %+.2f%% | 16h %+.2f%%\n",
+			time.Unix(e.Time,0).UTC().Format("2006-01-02 15:04 UTC"),e.TradeScore,e.RiskPct,e.R1,e.R2,e.R3,e.Return4H,e.Return8H,e.Return16H)
 	}
 }
 
@@ -48,6 +50,12 @@ func printBucket(b wyckoff.V3ValidationBucket) {
 	if b.Triggers==0 { fmt.Printf("%-12s n=%3d\n",b.Name,b.Triggers); return }
 	fmt.Printf("%-12s n=%3d | score %.3f | 4h %.1f%% %+.3f%% | 8h %.1f%% %+.3f%% | 16h %.1f%% %+.3f%% | MFE %+.3f%% MAE %+.3f%%\n",
 		b.Name,b.Triggers,b.AvgScore,b.WinRate4H,b.AvgReturn4H,b.WinRate8H,b.AvgReturn8H,b.WinRate16H,b.AvgReturn16H,b.AvgMFE16H,b.AvgMAE16H)
+}
+
+func printRisk(b wyckoff.V3ValidationBucket) {
+	if b.Triggers==0 { return }
+	fmt.Printf("             risk %.2f%% | 1R win %.1f%% avg %+.3fR | 2R win %.1f%% avg %+.3fR | 3R win %.1f%% avg %+.3fR\n",
+		b.AvgRiskPct,b.R1WinRate,b.AvgR1,b.R2WinRate,b.AvgR2,b.R3WinRate,b.AvgR3)
 }
 
 func fetch15M(symbol string, days int) ([]models.OHLCV,error) {
