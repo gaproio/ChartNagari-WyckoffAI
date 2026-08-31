@@ -72,13 +72,33 @@ type BTCMasterFunnel struct {
 	Trades              int `json:"trades"`
 }
 
+// BTCMasterStructureCohort compares midpoint-valid V3 structures from the same
+// V3-signal next-open anchor. B_ACCEPTED/B_REJECTED classification may use up to
+// the next eight closed candles, so this is descriptive research only and not a
+// causal entry rule at the common anchor.
+type BTCMasterStructureCohort struct {
+	Name         string  `json:"name"`
+	Structures   int     `json:"structures"`
+	WinRate16H   float64 `json:"win_rate_16h"`
+	AvgReturn16H float64 `json:"avg_return_16h_pct"`
+	AvgMFE16H    float64 `json:"avg_mfe_16h_pct"`
+	AvgMAE16H    float64 `json:"avg_mae_16h_pct"`
+}
+
+type btcMasterStructureObservation struct {
+	ret16 float64
+	mfe16 float64
+	mae16 float64
+}
+
 type BTCMasterReport struct {
-	Config   BTCMasterConfig   `json:"config"`
-	Funnel   BTCMasterFunnel   `json:"funnel"`
-	Overall  BTCMasterBucket   `json:"overall"`
-	ByYear   []BTCMasterBucket `json:"by_year"`
-	ByRegime []BTCMasterBucket `json:"by_regime"`
-	Trades   []BTCMasterTrade  `json:"trades"`
+	Config      BTCMasterConfig            `json:"config"`
+	Funnel      BTCMasterFunnel            `json:"funnel"`
+	ByBDecision []BTCMasterStructureCohort `json:"by_b_decision"`
+	Overall     BTCMasterBucket            `json:"overall"`
+	ByYear      []BTCMasterBucket          `json:"by_year"`
+	ByRegime    []BTCMasterBucket          `json:"by_regime"`
+	Trades      []BTCMasterTrade           `json:"trades"`
 }
 
 // ValidateBTCMaster studies only the frozen BTC B-profile:
@@ -91,6 +111,7 @@ func ValidateBTCMaster(input []models.OHLCV, validation V3ValidationSummary, cfg
 	if cfg.RegimeThresholdPct <= 0 { cfg.RegimeThresholdPct = 10 }
 	out := BTCMasterReport{Config: cfg}
 	out.Funnel.V3Structures = len(validation.Events)
+	cohorts := map[string][]btcMasterStructureObservation{}
 
 	for _, e := range validation.Events {
 		if e.BarIndex < 199 || e.SpringATR <= 0 { continue }
@@ -113,6 +134,24 @@ func ValidateBTCMaster(input []models.OHLCV, validation V3ValidationSummary, cfg
 		out.Funnel.MidpointValid++
 
 		decisionIdx := v4VariantEntry(bars, e.BarIndex, testGlobal, midpoint, 8, v4EntryProspectiveHL)
+		cohortName := "B_REJECTED"
+		if decisionIdx >= 0 { cohortName = "B_ACCEPTED" }
+		anchorIdx := e.BarIndex + 1
+		if anchorIdx >= 0 && anchorIdx+64 < len(bars) {
+			anchor := bars[anchorIdx].Open
+			if anchor > 0 {
+				maxHigh, minLow := anchor, anchor
+				for j:=anchorIdx; j<=anchorIdx+64; j++ {
+					if bars[j].High > maxHigh { maxHigh = bars[j].High }
+					if bars[j].Low < minLow { minLow = bars[j].Low }
+				}
+				cohorts[cohortName] = append(cohorts[cohortName], btcMasterStructureObservation{
+					ret16: pctReturn(anchor,bars[anchorIdx+64].Close),
+					mfe16: pctReturn(anchor,maxHigh),
+					mae16: pctReturn(anchor,minLow),
+				})
+			}
+		}
 		if decisionIdx < 0 { continue }
 		out.Funnel.BDecisionFound++
 
@@ -149,6 +188,9 @@ func ValidateBTCMaster(input []models.OHLCV, validation V3ValidationSummary, cfg
 		})
 	}
 	out.Funnel.Trades = len(out.Trades)
+	for _, name := range []string{"B_ACCEPTED","B_REJECTED"} {
+		out.ByBDecision = append(out.ByBDecision, summarizeBTCMasterStructureCohort(name, cohorts[name]))
+	}
 
 	out.Overall = summarizeBTCMaster("ALL", out.Trades)
 	years := map[int][]BTCMasterTrade{}
@@ -192,6 +234,24 @@ func btc30DRegime(bars []models.OHLCV, entryIndex, lookbackBars int, thresholdPc
 	if ret > thresholdPct { return "BULL_30D",ret }
 	if ret < -thresholdPct { return "BEAR_30D",ret }
 	return "SIDEWAYS_30D",ret
+}
+
+func summarizeBTCMasterStructureCohort(name string, observations []btcMasterStructureObservation) BTCMasterStructureCohort {
+	b := BTCMasterStructureCohort{Name:name, Structures:len(observations)}
+	if len(observations)==0 { return b }
+	wins := 0
+	for _,o := range observations {
+		b.AvgReturn16H += o.ret16
+		b.AvgMFE16H += o.mfe16
+		b.AvgMAE16H += o.mae16
+		if o.ret16 > 0 { wins++ }
+	}
+	n := float64(len(observations))
+	b.WinRate16H = float64(wins)/n*100
+	b.AvgReturn16H /= n
+	b.AvgMFE16H /= n
+	b.AvgMAE16H /= n
+	return b
 }
 
 func summarizeBTCMaster(name string, trades []BTCMasterTrade) BTCMasterBucket {
