@@ -21,14 +21,16 @@ Scope: BTCUSDT, 15-minute candles, Wyckoff accumulation research only.
 5. Do not promote a research variant to the frozen baseline solely because it wins on the same historical sample that suggested it.
 6. Keep causal next-open execution and conservative same-candle stop priority.
 7. Do not enable live trading or automatic order execution. Paper alerts may be considered only after robustness work.
-8. If tests fail, data is incomplete, repository state is ambiguous, or evidence conflicts, stop the loop and request human review rather than forcing a result.
-9. The Mac poller may run every 20 minutes, but it should execute the expensive study only when new research code appears on `wyckoff-v2`.
+8. If tests/compilation fail after an assistant research commit, the Mac publishes `research/btc15m/latest_error.txt`; the assistant may make one focused repair commit. If data is incomplete, repository state is ambiguous, or research evidence conflicts, stop and request human review rather than forcing a result.
+9. The Mac poller may run every 20 minutes, but it should execute the expensive study only when new research code is waiting for a result.
 10. The assistant should consume a newly pushed `research/btc15m/latest.txt` report before proposing the next experiment.
 
 ## Alternating handshake
 
 - Assistant pushes exactly one new research-code commit.
-- Mac poller detects the new commit, pulls, runs tests and the master report, then pushes `research: refresh BTCUSDT 15M master report`.
-- Assistant consumes that report and may push the next single research-code commit.
+- Mac poller detects the new commit, pulls, runs tests and the master report.
+- On success the Mac pushes `research: refresh BTCUSDT 15M master report` and updates `research/btc15m/latest.txt`.
+- On compile/test/run failure the Mac pushes `research: BTCUSDT 15M loop failure` and updates `research/btc15m/latest_error.txt`.
+- Assistant consumes either the successful report or the failure report. It may then push exactly one next research commit or one focused repair commit.
 
-This handshake prevents both sides from repeatedly acting on stale results.
+This handshake prevents both sides from repeatedly acting on stale results or repeatedly retrying the same broken experiment.
