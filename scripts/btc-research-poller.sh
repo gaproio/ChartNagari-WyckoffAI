@@ -5,6 +5,7 @@ REMOTE="${BTC_MASTER_REMOTE:-mygithub}"
 BRANCH="${BTC_MASTER_BRANCH:-wyckoff-v2}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOCK_DIR="${TMPDIR:-/tmp}/chartnagari-btc15m-research.lock"
+REPORT_COMMIT_MSG="research: refresh BTCUSDT 15M master report"
 
 cd "$ROOT"
 
@@ -25,7 +26,7 @@ if ! git remote get-url "$REMOTE" >/dev/null 2>&1; then
   exit 0
 fi
 
-# Never touch an actively edited working tree.
+# Never touch an actively edited tracked working tree.
 if [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
   echo "BTC15M research poller: tracked working tree is dirty; skipping for safety."
   exit 0
@@ -35,18 +36,21 @@ git fetch "$REMOTE" "$BRANCH" --quiet
 LOCAL_SHA="$(git rev-parse HEAD)"
 REMOTE_SHA="$(git rev-parse "$REMOTE/$BRANCH")"
 
-if [[ "$LOCAL_SHA" == "$REMOTE_SHA" ]]; then
-  echo "BTC15M research poller: no new research code."
+if [[ "$LOCAL_SHA" != "$REMOTE_SHA" ]]; then
+  if ! git merge-base --is-ancestor "$LOCAL_SHA" "$REMOTE_SHA"; then
+    echo "BTC15M research poller: remote is not a fast-forward; manual review required."
+    exit 0
+  fi
+  echo "BTC15M research poller: new remote commit detected."
+  git pull --ff-only "$REMOTE" "$BRANCH"
+fi
+
+TIP_MSG="$(git log -1 --pretty=%s)"
+if [[ "$TIP_MSG" == "$REPORT_COMMIT_MSG" ]]; then
+  echo "BTC15M research poller: latest research code already has a published report."
   exit 0
 fi
 
-if ! git merge-base --is-ancestor "$LOCAL_SHA" "$REMOTE_SHA"; then
-  echo "BTC15M research poller: remote is not a fast-forward; manual review required."
-  exit 0
-fi
-
-echo "BTC15M research poller: new remote commit detected."
-git pull --ff-only "$REMOTE" "$BRANCH"
-
-# The master runner re-checks tests, builds the report, commits it and pushes it.
+# Any non-report tip means research code is waiting for a fresh tested report.
+echo "BTC15M research poller: research code is waiting for a report; running master study."
 BTC_MASTER_REMOTE="$REMOTE" BTC_MASTER_BRANCH="$BRANCH" bash ./scripts/btc-master-auto.sh
