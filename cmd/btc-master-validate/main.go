@@ -46,6 +46,7 @@ func main() {
 	targetVariants := wyckoff.ValidateBTCTargetVariants(bars,v3,cfg)
 	stopDiag := wyckoff.ValidateBTCStopDiagnostic(bars,v3)
 	riskDiag := wyckoff.ValidateBTCRiskDiagnostic(report)
+	volDiag := wyckoff.ValidateBTCVolatilityDiagnostic(bars,report)
 
 	fmt.Println("\nBTC MASTER REPORT — frozen B profile")
 	fmt.Printf("Window end: %s | days %d | bars %d | V3 structures %d\n",end.Format("2006-01-02"),*days,len(bars),len(v3.Events))
@@ -97,6 +98,10 @@ func main() {
 	fmt.Println("\nBTC 15M structural-risk diagnostic (DESCRIPTIVE; no risk filter):")
 	fmt.Println("Exact frozen trades grouped by broad entry-to-stop distance. This measures geometry/cost behavior; it does NOT set a max-risk rule.")
 	for _,r := range riskDiag { printRiskBucket(r) }
+
+	fmt.Println("\nBTC 15M volatility-normalized diagnostic (DESCRIPTIVE; no volatility filter):")
+	fmt.Println("Frozen trades grouped by causal 14-bar ATR%% percentile versus the prior 30 days. Terciles are fixed and normalize different BTC eras.")
+	for _,r := range volDiag { printVolatilityBucket(r) }
 
 	fmt.Println("\nOverall:")
 	printBucket(report.Overall)
@@ -154,6 +159,12 @@ func printRiskBucket(r wyckoff.BTCRiskBucket) {
 	if r.Trades == 0 { fmt.Printf("%-12s n=0\n",r.Name); return }
 	fmt.Printf("%-12s n=%3d | T/S/X %d/%d/%d | net-win %.1f%% | risk %.2f%% | gross %+.3fR net %+.3fR cost %.3fR | 16h %+.2f%% | MFE %+.2f%% MAE %+.2f%%\n",
 		r.Name,r.Trades,r.TargetHits,r.StopHits,r.TimeExits,r.NetWinRate,r.AvgRiskPct,r.AvgGrossR,r.AvgNetR,r.AvgCostR,r.AvgReturn16H,r.AvgMFE16H,r.AvgMAE16H)
+}
+
+func printVolatilityBucket(r wyckoff.BTCVolatilityBucket) {
+	if r.Trades == 0 { fmt.Printf("%-16s n=0\n",r.Name); return }
+	fmt.Printf("%-16s n=%3d | T/S/X %d/%d/%d | net-win %.1f%% | ATR %.3f%% pctile %.1f | risk %.2f%% = %.2f ATR | net %+.3fR | 16h %+.2f%% | MFE %+.2f%% MAE %+.2f%%\n",
+		r.Name,r.Trades,r.TargetHits,r.StopHits,r.TimeExits,r.NetWinRate,r.AvgATRPercent,r.AvgVolPercentile,r.AvgRiskPct,r.AvgRiskATR,r.AvgNetR,r.AvgReturn16H,r.AvgMFE16H,r.AvgMAE16H)
 }
 
 func printBucket(b wyckoff.BTCMasterBucket) {
