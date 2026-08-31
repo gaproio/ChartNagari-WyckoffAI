@@ -6,6 +6,8 @@ BRANCH="${BTC_MASTER_BRANCH:-wyckoff-v2}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOCK_DIR="${TMPDIR:-/tmp}/chartnagari-btc15m-research.lock"
 REPORT_COMMIT_MSG="research: refresh BTCUSDT 15M master report"
+FAIL_COMMIT_MSG="research: BTCUSDT 15M loop failure"
+ERROR_FILE="research/btc15m/latest_error.txt"
 
 cd "$ROOT"
 
@@ -13,7 +15,12 @@ if ! mkdir "$LOCK_DIR" 2>/dev/null; then
   echo "BTC15M research poller: another run is active; skipping."
   exit 0
 fi
-trap 'rmdir "$LOCK_DIR" 2>/dev/null || true' EXIT
+RUN_LOG="$(mktemp)"
+cleanup() {
+  rm -f "$RUN_LOG"
+  rmdir "$LOCK_DIR" 2>/dev/null || true
+}
+trap cleanup EXIT
 
 CURRENT_BRANCH="$(git branch --show-current)"
 if [[ "$CURRENT_BRANCH" != "$BRANCH" ]]; then
@@ -50,7 +57,35 @@ if [[ "$TIP_MSG" == "$REPORT_COMMIT_MSG" ]]; then
   echo "BTC15M research poller: latest research code already has a published report."
   exit 0
 fi
+if [[ "$TIP_MSG" == "$FAIL_COMMIT_MSG" ]]; then
+  echo "BTC15M research poller: last run failed and is waiting for assistant repair."
+  exit 0
+fi
 
-# Any non-report tip means research code is waiting for a fresh tested report.
+# Any other tip means research code is waiting for a fresh tested report.
 echo "BTC15M research poller: research code is waiting for a report; running master study."
-BTC_MASTER_REMOTE="$REMOTE" BTC_MASTER_BRANCH="$BRANCH" bash ./scripts/btc-master-auto.sh
+set +e
+BTC_MASTER_REMOTE="$REMOTE" BTC_MASTER_BRANCH="$BRANCH" bash ./scripts/btc-master-auto.sh 2>&1 | tee "$RUN_LOG"
+STATUS=${PIPESTATUS[0]}
+set -e
+
+if [[ "$STATUS" -eq 0 ]]; then
+  exit 0
+fi
+
+mkdir -p "$(dirname "$ERROR_FILE")"
+{
+  echo "# BTCUSDT / 15M autonomous loop failure"
+  echo "# generated_utc: $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+  echo "# source_commit: $(git rev-parse HEAD)"
+  echo "# exit_status: $STATUS"
+  echo
+  cat "$RUN_LOG"
+} > "$ERROR_FILE"
+
+git add "$ERROR_FILE"
+git commit -m "$FAIL_COMMIT_MSG"
+git push "$REMOTE" "HEAD:$BRANCH"
+
+echo "BTC15M research poller: failure report published for assistant repair."
+exit "$STATUS"
