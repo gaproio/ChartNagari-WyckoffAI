@@ -7,6 +7,7 @@ DAYS="${BTC_MASTER_DAYS:-3300}"
 END_DATE="${BTC_MASTER_END:-2026-08-31}"
 FEE_BPS="${BTC_MASTER_FEE_BPS:-10}"
 SLIPPAGE_BPS="${BTC_MASTER_SLIPPAGE_BPS:-5}"
+NOTIFY_CHATGPT="${BTC_MASTER_NOTIFY_CHATGPT:-auto}"
 REPORT_DIR="research/btc15m"
 REPORT_FILE="${REPORT_DIR}/latest.txt"
 ERROR_FILE="${REPORT_DIR}/latest_error.txt"
@@ -72,13 +73,35 @@ if git diff --cached --quiet; then
   echo
   echo "Report is unchanged; nothing to commit."
   echo "Saved at: $REPORT_FILE"
-  exit 0
+else
+  git commit -m "research: refresh BTCUSDT 15M master report"
+  git push "$REMOTE" "HEAD:$BRANCH"
+
+  echo
+  echo "BTCUSDT / 15M report published successfully."
+  echo "GitHub path: $REPORT_FILE"
+  echo "Autonomous loop can now consume this report."
 fi
 
-git commit -m "research: refresh BTCUSDT 15M master report"
-git push "$REMOTE" "HEAD:$BRANCH"
+# Fast mode: when this script is run manually in an interactive terminal,
+# best-effort notify the currently open ChatGPT Chrome tab by sending "done".
+# Background launchd/poller runs are piped/non-interactive, so auto mode skips.
+SHOULD_NOTIFY=0
+case "${NOTIFY_CHATGPT,,}" in
+  1|true|yes|on)
+    SHOULD_NOTIFY=1
+    ;;
+  0|false|no|off)
+    SHOULD_NOTIFY=0
+    ;;
+  auto)
+    if [[ -t 1 ]]; then SHOULD_NOTIFY=1; fi
+    ;;
+  *)
+    echo "Unknown BTC_MASTER_NOTIFY_CHATGPT='$NOTIFY_CHATGPT'; skipping ChatGPT notification."
+    ;;
+esac
 
-echo
-echo "BTCUSDT / 15M report published successfully."
-echo "GitHub path: $REPORT_FILE"
-echo "Autonomous loop can now consume this report."
+if [[ "$SHOULD_NOTIFY" -eq 1 ]]; then
+  bash ./scripts/chatgpt-done-macos.sh || true
+fi
