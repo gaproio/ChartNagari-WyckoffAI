@@ -78,6 +78,7 @@ type BTCMasterFunnel struct {
 // causal entry rule at the common anchor.
 type BTCMasterStructureCohort struct {
 	Name         string  `json:"name"`
+	Year         int     `json:"year,omitempty"`
 	Structures   int     `json:"structures"`
 	WinRate16H   float64 `json:"win_rate_16h"`
 	AvgReturn16H float64 `json:"avg_return_16h_pct"`
@@ -86,19 +87,21 @@ type BTCMasterStructureCohort struct {
 }
 
 type btcMasterStructureObservation struct {
+	year  int
 	ret16 float64
 	mfe16 float64
 	mae16 float64
 }
 
 type BTCMasterReport struct {
-	Config      BTCMasterConfig            `json:"config"`
-	Funnel      BTCMasterFunnel            `json:"funnel"`
-	ByBDecision []BTCMasterStructureCohort `json:"by_b_decision"`
-	Overall     BTCMasterBucket            `json:"overall"`
-	ByYear      []BTCMasterBucket          `json:"by_year"`
-	ByRegime    []BTCMasterBucket          `json:"by_regime"`
-	Trades      []BTCMasterTrade           `json:"trades"`
+	Config           BTCMasterConfig            `json:"config"`
+	Funnel           BTCMasterFunnel            `json:"funnel"`
+	ByBDecision      []BTCMasterStructureCohort `json:"by_b_decision"`
+	ByBDecisionYear  []BTCMasterStructureCohort `json:"by_b_decision_year"`
+	Overall          BTCMasterBucket            `json:"overall"`
+	ByYear           []BTCMasterBucket          `json:"by_year"`
+	ByRegime         []BTCMasterBucket          `json:"by_regime"`
+	Trades           []BTCMasterTrade           `json:"trades"`
 }
 
 // ValidateBTCMaster studies only the frozen BTC B-profile:
@@ -146,6 +149,7 @@ func ValidateBTCMaster(input []models.OHLCV, validation V3ValidationSummary, cfg
 					if bars[j].Low < minLow { minLow = bars[j].Low }
 				}
 				cohorts[cohortName] = append(cohorts[cohortName], btcMasterStructureObservation{
+					year:  bars[anchorIdx].OpenTime.UTC().Year(),
 					ret16: pctReturn(anchor,bars[anchorIdx+64].Close),
 					mfe16: pctReturn(anchor,maxHigh),
 					mae16: pctReturn(anchor,minLow),
@@ -189,7 +193,24 @@ func ValidateBTCMaster(input []models.OHLCV, validation V3ValidationSummary, cfg
 	}
 	out.Funnel.Trades = len(out.Trades)
 	for _, name := range []string{"B_ACCEPTED","B_REJECTED"} {
-		out.ByBDecision = append(out.ByBDecision, summarizeBTCMasterStructureCohort(name, cohorts[name]))
+		out.ByBDecision = append(out.ByBDecision, summarizeBTCMasterStructureCohort(name, 0, cohorts[name]))
+	}
+
+	cohortYears := map[int]bool{}
+	for _, observations := range cohorts {
+		for _, o := range observations { cohortYears[o.year] = true }
+	}
+	cohortYearKeys := make([]int,0,len(cohortYears))
+	for y := range cohortYears { cohortYearKeys = append(cohortYearKeys,y) }
+	sort.Ints(cohortYearKeys)
+	for _, y := range cohortYearKeys {
+		for _, name := range []string{"B_ACCEPTED","B_REJECTED"} {
+			var ys []btcMasterStructureObservation
+			for _, o := range cohorts[name] {
+				if o.year == y { ys = append(ys,o) }
+			}
+			if len(ys) > 0 { out.ByBDecisionYear = append(out.ByBDecisionYear, summarizeBTCMasterStructureCohort(name,y,ys)) }
+		}
 	}
 
 	out.Overall = summarizeBTCMaster("ALL", out.Trades)
@@ -236,8 +257,8 @@ func btc30DRegime(bars []models.OHLCV, entryIndex, lookbackBars int, thresholdPc
 	return "SIDEWAYS_30D",ret
 }
 
-func summarizeBTCMasterStructureCohort(name string, observations []btcMasterStructureObservation) BTCMasterStructureCohort {
-	b := BTCMasterStructureCohort{Name:name, Structures:len(observations)}
+func summarizeBTCMasterStructureCohort(name string, year int, observations []btcMasterStructureObservation) BTCMasterStructureCohort {
+	b := BTCMasterStructureCohort{Name:name, Year:year, Structures:len(observations)}
 	if len(observations)==0 { return b }
 	wins := 0
 	for _,o := range observations {
