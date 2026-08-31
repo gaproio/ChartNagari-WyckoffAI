@@ -9,9 +9,26 @@ import (
 	"github.com/Ju571nK/Chatter/pkg/models"
 )
 
+// chronologicalCandles returns candles in oldest-first order without mutating
+// the caller's slice. Storage queries used by the live pipeline return
+// newest-first data, while indicator formulas are chronological.
+func chronologicalCandles(candles []models.OHLCV) []models.OHLCV {
+	if len(candles) < 2 || !candles[0].OpenTime.After(candles[len(candles)-1].OpenTime) {
+		return candles
+	}
+
+	out := make([]models.OHLCV, len(candles))
+	for i, candle := range candles {
+		out[len(candles)-1-i] = candle
+	}
+	return out
+}
+
 // Compute calculates all supported indicators for each timeframe in bars.
 // It returns a flat map with prefixed keys in the form "{TF}:{indicator}".
 // If data is insufficient for a particular indicator, that key is omitted.
+// Input candle slices may be oldest-first or newest-first; Compute normalizes
+// them internally before calculating sequential indicators.
 func Compute(bars map[string][]models.OHLCV) map[string]float64 {
 	result := make(map[string]float64)
 	if len(bars) == 0 {
@@ -22,6 +39,7 @@ func Compute(bars map[string][]models.OHLCV) map[string]float64 {
 		if len(candles) == 0 {
 			continue
 		}
+		candles = chronologicalCandles(candles)
 
 		// Extract price/volume slices.
 		closes := make([]float64, len(candles))
