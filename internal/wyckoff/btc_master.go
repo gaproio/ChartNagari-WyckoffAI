@@ -59,12 +59,26 @@ type BTCMasterBucket struct {
 	AvgExitBars   float64 `json:"avg_exit_bars"`
 }
 
+// BTCMasterFunnel is descriptive only. It shows where frozen B-profile
+// candidates disappear without changing any detector or execution rule.
+type BTCMasterFunnel struct {
+	V3Structures        int `json:"v3_structures"`
+	FoundationRecovered int `json:"foundation_recovered"`
+	TestRecovered       int `json:"test_recovered"`
+	MidpointValid       int `json:"midpoint_valid"`
+	BDecisionFound      int `json:"b_decision_found"`
+	NextOpenAvailable   int `json:"next_open_available"`
+	ValidEntryStop      int `json:"valid_entry_stop"`
+	Trades              int `json:"trades"`
+}
+
 type BTCMasterReport struct {
-	Config  BTCMasterConfig   `json:"config"`
-	Overall BTCMasterBucket   `json:"overall"`
-	ByYear  []BTCMasterBucket `json:"by_year"`
+	Config   BTCMasterConfig   `json:"config"`
+	Funnel   BTCMasterFunnel   `json:"funnel"`
+	Overall  BTCMasterBucket   `json:"overall"`
+	ByYear   []BTCMasterBucket `json:"by_year"`
 	ByRegime []BTCMasterBucket `json:"by_regime"`
-	Trades  []BTCMasterTrade  `json:"trades"`
+	Trades   []BTCMasterTrade  `json:"trades"`
 }
 
 // ValidateBTCMaster studies only the frozen BTC B-profile:
@@ -76,12 +90,14 @@ func ValidateBTCMaster(input []models.OHLCV, validation V3ValidationSummary, cfg
 	if cfg.RegimeLookbackBars <= 0 { cfg.RegimeLookbackBars = 30 * 24 * 4 }
 	if cfg.RegimeThresholdPct <= 0 { cfg.RegimeThresholdPct = 10 }
 	out := BTCMasterReport{Config: cfg}
+	out.Funnel.V3Structures = len(validation.Events)
 
 	for _, e := range validation.Events {
 		if e.BarIndex < 199 || e.SpringATR <= 0 { continue }
 		start := e.BarIndex - 199
 		a := AnalyzeV3Foundation(validation.Symbol, "15M", bars[start:e.BarIndex+1])
 		if !a.HasSpring || !a.HasTest { continue }
+		out.Funnel.FoundationRecovered++
 
 		testLocal := -1
 		for _, ev := range a.Events {
@@ -90,17 +106,24 @@ func ValidateBTCMaster(input []models.OHLCV, validation V3ValidationSummary, cfg
 		if testLocal < 0 { continue }
 		testGlobal := start + testLocal
 		if testGlobal < 0 || testGlobal >= len(bars) { continue }
+		out.Funnel.TestRecovered++
 
 		midpoint := (a.Range.Support + a.Range.Resistance) / 2
 		if midpoint <= 0 { continue }
+		out.Funnel.MidpointValid++
+
 		decisionIdx := v4VariantEntry(bars, e.BarIndex, testGlobal, midpoint, 8, v4EntryProspectiveHL)
 		if decisionIdx < 0 { continue }
+		out.Funnel.BDecisionFound++
+
 		execIdx := decisionIdx + 1
 		if execIdx >= len(bars) || execIdx+64 >= len(bars) { continue }
+		out.Funnel.NextOpenAvailable++
 
 		stop := v4VariantStop(bars, testGlobal, decisionIdx, e.SpringLow, e.SpringATR, v4StopPostTest)
 		entry := bars[execIdx].Open
 		if entry <= 0 || stop <= 0 || stop >= entry { continue }
+		out.Funnel.ValidEntryStop++
 		risk := entry - stop
 		riskPct := risk / entry * 100
 
@@ -125,6 +148,7 @@ func ValidateBTCMaster(input []models.OHLCV, validation V3ValidationSummary, cfg
 			Regime: regime, RegimeReturn30: regimeRet,
 		})
 	}
+	out.Funnel.Trades = len(out.Trades)
 
 	out.Overall = summarizeBTCMaster("ALL", out.Trades)
 	years := map[int][]BTCMasterTrade{}
