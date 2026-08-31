@@ -47,6 +47,12 @@ func main() {
 	fmt.Println("Stop: lowest Test-to-decision low - 0.25 Spring ATR | Target benchmark: 3R | Max hold: 16h")
 	fmt.Printf("Costs: fee %.1f bps/side + slippage %.1f bps/side | regime: 30D return >+10%% BULL, <-10%% BEAR, else SIDEWAYS\n",*feeBps,*slipBps)
 
+	f := report.Funnel
+	fmt.Println("\nSignal funnel (descriptive only; rules unchanged):")
+	fmt.Printf("V3 %d -> foundation %d -> Test %d -> midpoint %d -> B decision<=8 bars %d -> next-open history %d -> valid entry/stop %d -> trades %d\n",
+		f.V3Structures,f.FoundationRecovered,f.TestRecovered,f.MidpointValid,f.BDecisionFound,f.NextOpenAvailable,f.ValidEntryStop,f.Trades)
+	fmt.Printf("No B decision within 8 bars: %d of %d midpoint-valid structures\n",f.MidpointValid-f.BDecisionFound,f.MidpointValid)
+
 	fmt.Println("\nOverall:")
 	printBucket(report.Overall)
 	fmt.Println("\nBy year:")
