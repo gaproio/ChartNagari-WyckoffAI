@@ -53,6 +53,10 @@ func main() {
 		f.V3Structures,f.FoundationRecovered,f.TestRecovered,f.MidpointValid,f.BDecisionFound,f.NextOpenAvailable,f.ValidEntryStop,f.Trades)
 	fmt.Printf("No B decision within 8 bars: %d of %d midpoint-valid structures\n",f.MidpointValid-f.BDecisionFound,f.MidpointValid)
 
+	fmt.Println("\nB decision selection check (descriptive; common V3 next-open anchor):")
+	fmt.Println("Accepted/rejected label may use the next 8 candles; this section is NOT a tradable V3-time filter.")
+	for _,b := range report.ByBDecision { printStructureCohort(b) }
+
 	fmt.Println("\nOverall:")
 	printBucket(report.Overall)
 	fmt.Println("\nBy year:")
@@ -65,6 +69,12 @@ func main() {
 		fmt.Printf("%s | %-11s 30D %+.1f%% | risk %.2f%% | %-6s exit %2d bars | gross %+.3fR net %+.3fR | 16h %+.2f%% | MFE %+.2f%% MAE %+.2f%%\n",
 			time.Unix(t.EntryTime,0).UTC().Format("2006-01-02 15:04"),t.Regime,t.RegimeReturn30,t.RiskPct,t.Outcome,t.ExitBars,t.GrossR,t.NetR,t.Return16H,t.MFE16H,t.MAE16H)
 	}
+}
+
+func printStructureCohort(b wyckoff.BTCMasterStructureCohort) {
+	if b.Structures == 0 { fmt.Printf("%-12s n=0\n",b.Name); return }
+	fmt.Printf("%-12s n=%3d | 16h win %.1f%% avg %+.3f%% | MFE %+.2f%% MAE %+.2f%%\n",
+		b.Name,b.Structures,b.WinRate16H,b.AvgReturn16H,b.AvgMFE16H,b.AvgMAE16H)
 }
 
 func printBucket(b wyckoff.BTCMasterBucket) {
