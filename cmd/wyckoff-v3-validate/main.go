@@ -58,6 +58,10 @@ func main() {
 	fmt.Println("\nV4 candidate rules — research comparison only, V3 detector unchanged:")
 	for _,r:=range v4.Candidates { printV4Candidate(r) }
 
+	causal := wyckoff.ValidateV4Causal(bars,s)
+	fmt.Println("\nV4 causal study — MIDPOINT RECLAIM + confirmed HIGHER LOW:")
+	printV4Causal(causal)
+
 	fmt.Println("\nRecent V3 triggers:")
 	start:=0; if len(s.Events)>12 { start=len(s.Events)-12 }
 	for _,e:=range s.Events[start:] {
@@ -94,6 +98,17 @@ func printV4Candidate(r wyckoff.V4CandidateResult) {
 	if r.Signals==0 { fmt.Printf("%-24s n=%3d\n",r.Name,r.Signals); return }
 	fmt.Printf("%-24s n=%3d | 16h win %.1f%% avg %+.3f%% | confirm %3d (%.1f%%) | confirmed 3R avg %+.3fR\n",
 		r.Name,r.Signals,r.WinRate16H,r.AvgReturn16H,r.ConfirmedTrades,r.ConfirmRate,r.AvgConfirmedR3)
+}
+
+func printV4Causal(r wyckoff.V4CausalSummary) {
+	if r.V4Entries==0 {
+		fmt.Printf("V3 signals %d | V4 entries 0\n",r.V3Signals)
+		return
+	}
+	fmt.Printf("V3 signals %d | V4 entries %d (%.1f%%) | delay %.2f bars | risk %.2f%%\n",
+		r.V3Signals,r.V4Entries,r.EntryRate,r.AvgDelayBars,r.AvgRiskPct)
+	fmt.Printf("16h win %.1f%% avg %+.3f%% | 1R %.1f%% %+.3fR | 2R %.1f%% %+.3fR | 3R %.1f%% %+.3fR\n",
+		r.WinRate16H,r.AvgReturn16H,r.R1WinRate,r.AvgR1,r.R2WinRate,r.AvgR2,r.R3WinRate,r.AvgR3)
 }
 
 func fetch15M(symbol string, days int) ([]models.OHLCV,error) {
