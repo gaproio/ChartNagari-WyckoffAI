@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-01T05:36:11Z
-# git_commit_before_report: 7db383161e7430037b2cef61a1f76447f2f6bb71
+# generated_utc: 2026-09-01T05:44:22Z
+# git_commit_before_report: f32a77988bcda18e8a8c03e75d1a227450155dcc
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -184,6 +184,14 @@ Thursday  n= 1 | net-win 100.0% | total +2.840R avg +2.840R | 46.0% of total net
 Friday    n= 6 | net-win 50.0% | total +2.511R avg +0.419R | 40.6% of total net
 Saturday  n= 1 | net-win 0.0% | total -0.272R avg -0.272R | -4.4% of total net
 Sunday    n= 5 | net-win 40.0% | total -2.266R avg -0.453R | -36.7% of total net
+
+BTC 15M expanding-prefix stability diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Fixed chronological checkpoints at 5/10/15/20/all trades. This measures whether the cumulative edge persists as history accumulates; it is not a trade filter.
+first  5 trades | 2017-09-03 -> 2017-12-29 | net-win 40.0% | total -1.403R avg -0.281R
+first 10 trades | 2017-09-03 -> 2018-06-11 | net-win 50.0% | total -0.260R avg -0.026R
+first 15 trades | 2017-09-03 -> 2021-01-10 | net-win 33.3% | total -4.657R avg -0.310R
+first 20 trades | 2017-09-03 -> 2022-01-24 | net-win 50.0% | total +4.806R avg +0.240R
+first 23 trades | 2017-09-03 -> 2026-06-27 | net-win 47.8% | total +6.178R avg +0.269R
 
 BTC 15M cost-sensitivity diagnostic (ROBUSTNESS; frozen rules unchanged):
 Rescales only the existing research cost assumption: 0x, 0.5x, 1x baseline, and 2x stress. This is not an exchange fee claim.
