@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-01T05:12:49Z
-# git_commit_before_report: 788e4a8c63dd079fc7ee66fd2fe646468ddbcbb6
+# generated_utc: 2026-09-01T05:19:28Z
+# git_commit_before_report: 52da16800a58dae82d29be6f2f077ede8f7afd86
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -168,6 +168,12 @@ leave out 2021: removed  5 trades +5.503R | remaining 18 trades +0.675R avg +0.0
 leave out 2022: removed  1 trades +2.863R | remaining 22 trades +3.315R avg +0.151R
 leave out 2024: removed  1 trades -1.266R | remaining 22 trades +7.444R avg +0.338R
 leave out 2026: removed  2 trades +2.638R | remaining 21 trades +3.540R avg +0.169R
+
+BTC 15M UTC entry-session concentration (DESCRIPTIVE; frozen rules unchanged):
+Fixed 8-hour UTC blocks: 00-08, 08-16, and 16-24. Entry timestamps only; this is not a session filter.
+UTC 00-08  n= 5 | net-win 20.0% | total -1.008R avg -0.202R | -16.3% of total net
+UTC 08-16  n= 9 | net-win 55.6% | total +5.835R avg +0.648R | 94.4% of total net
+UTC 16-24  n= 9 | net-win 55.6% | total +1.351R avg +0.150R | 21.9% of total net
 
 BTC 15M cost-sensitivity diagnostic (ROBUSTNESS; frozen rules unchanged):
 Rescales only the existing research cost assumption: 0x, 0.5x, 1x baseline, and 2x stress. This is not an exchange fee claim.
