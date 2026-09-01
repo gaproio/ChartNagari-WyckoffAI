@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-01T05:44:22Z
-# git_commit_before_report: f32a77988bcda18e8a8c03e75d1a227450155dcc
+# generated_utc: 2026-09-01T05:53:27Z
+# git_commit_before_report: 6f97f41a8f9e04532f6a883fad94cda14c9f523e
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -16,6 +16,13 @@ Costs: fee 10.0 bps/side + slippage 5.0 bps/side | regime: 30D return >+10% BULL
 Signal funnel (descriptive only; rules unchanged):
 V3 105 -> foundation 105 -> Test 105 -> midpoint 105 -> B decision<=8 bars 23 -> next-open history 23 -> valid entry/stop 23 -> trades 23
 No B decision within 8 bars: 82 of 105 midpoint-valid structures
+
+BTC 15M B-component incidence by fixed era (DESCRIPTIVE; frozen rules unchanged):
+Within the frozen 8-bar post-signal window: midpoint reclaim, prospective-HL component, and their same-candle conjunction. Incidence only; no outcome filter.
+2017-2019    n= 51 | midpoint  20 (39.2%) | prospective-HL  31 (60.8%) | BOTH/B  14 (27.5%)
+2020-2022    n= 44 | midpoint  10 (22.7%) | prospective-HL  26 (59.1%) | BOTH/B   6 (13.6%)
+2023-2025    n=  7 | midpoint   1 (14.3%) | prospective-HL   2 (28.6%) | BOTH/B   1 (14.3%)
+2026 PARTIAL n=  3 | midpoint   2 (66.7%) | prospective-HL   2 (66.7%) | BOTH/B   2 (66.7%)
 
 B decision selection check (descriptive; common V3 next-open anchor):
 Accepted/rejected label may use the next 8 candles; this section is NOT a tradable V3-time filter.
