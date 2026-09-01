@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-01T04:21:43Z
-# git_commit_before_report: 554fce553d28a63b0bf20d4207e5f38227857b19
+# generated_utc: 2026-09-01T04:48:25Z
+# git_commit_before_report: e8f535a9644031626ebddb4f1e3a63caa8da9617
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -154,6 +154,10 @@ BTC 15M sequence/tail-dependence diagnostic (DESCRIPTIVE; frozen rules unchanged
 Chronological NetR path of the exact frozen trades; measures concentration and drawdown, not a new filter.
 trades 23 | total net +6.178R | median -0.034R | PF 1.60 | max DD 4.662R | max consecutive losses 5
 positive/negative/flat 11/12/0 | largest winner +2.910R = 47.1% of total net | top 3 winners +8.613R = 139.4% of total net
+
+BTC 15M winner-concentration stress (DESCRIPTIVE; frozen rules unchanged):
+Fixed leave-out stress removes the single largest winner and then the top three winners. This measures tail dependence only; it is not a trade filter.
+all 23 trades +6.178R | minus largest winner: 22 trades +3.268R avg +0.149R | minus top 3 winners: 20 trades -2.435R avg -0.122R
 
 BTC 15M cost-sensitivity diagnostic (ROBUSTNESS; frozen rules unchanged):
 Rescales only the existing research cost assumption: 0x, 0.5x, 1x baseline, and 2x stress. This is not an exchange fee claim.
