@@ -235,6 +235,30 @@ func main() {
 	}
 
 	fmt.Println()
+	fmt.Println("BTC 15M expanding-prefix stability diagnostic (DESCRIPTIVE; frozen rules unchanged):")
+	fmt.Println("Fixed chronological checkpoints at 5/10/15/20/all trades. This measures whether the cumulative edge persists as history accumulates; it is not a trade filter.")
+	checkpoints := []int{5, 10, 15, 20, len(report.Trades)}
+	seen := map[int]bool{}
+	for _, n := range checkpoints {
+		if n <= 0 || n > len(report.Trades) || seen[n] {
+			continue
+		}
+		seen[n] = true
+		total := 0.0
+		wins := 0
+		for i := 0; i < n; i++ {
+			total += report.Trades[i].NetR
+			if report.Trades[i].NetR > 0 {
+				wins++
+			}
+		}
+		first := time.Unix(report.Trades[0].EntryTime, 0).UTC().Format("2006-01-02")
+		last := time.Unix(report.Trades[n-1].EntryTime, 0).UTC().Format("2006-01-02")
+		fmt.Printf("first %2d trades | %s -> %s | net-win %.1f%% | total %+.3fR avg %+.3fR\n",
+			n, first, last, float64(wins)/float64(n)*100, total, total/float64(n))
+	}
+
+	fmt.Println()
 	fmt.Println("BTC 15M cost-sensitivity diagnostic (ROBUSTNESS; frozen rules unchanged):")
 	fmt.Println("Rescales only the existing research cost assumption: 0x, 0.5x, 1x baseline, and 2x stress. This is not an exchange fee claim.")
 	for _, r := range wyckoff.ValidateBTCCostSensitivity(report) {
