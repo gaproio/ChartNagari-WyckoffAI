@@ -54,6 +54,9 @@ if ! git remote get-url "$REMOTE" >/dev/null 2>&1; then
 fi
 
 # Keep code current, but refuse merges/rebases so the research state stays clean.
+# Important: this bash process may continue executing the script body loaded
+# before the pull. Changes to this runner itself therefore become active on the
+# following invocation; same-run diagnostics should live in Go helpers instead.
 git pull --ff-only "$REMOTE" "$BRANCH"
 
 echo
