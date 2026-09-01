@@ -105,7 +105,7 @@ func main() {
 	for _,r := range volDiag { printVolatilityBucket(r) }
 
 	fmt.Println("\nBTC 15M accepted-geometry by fixed era (DESCRIPTIVE; no geometry/era filter):")
-	fmt.Println("Exact frozen B-accepted structures only. Geometry is known by the B decision; fixed calendar eras match the temporal study.")
+	fmt.Println("Exact frozen B-accepted structures only. Test->B(total) includes the pre-signal Test->V3 lag; the frozen <=8-bar confirmation clock starts at the causal V3 signal.")
 	for _,r := range geometryDiag { printGeometryEra(r) }
 
 	fmt.Println("\nOverall:")
@@ -174,7 +174,7 @@ func printVolatilityBucket(r wyckoff.BTCVolatilityBucket) {
 
 func printGeometryEra(r wyckoff.BTCAcceptedGeometryEra) {
 	if r.Structures == 0 { fmt.Printf("%-12s n=0\n",r.Name); return }
-	fmt.Printf("%-12s n=%2d | range %.2f%% | PS->Test %.1f bars | Spring pen %.2f ATR | Spring->Test %.1f | Test->B %.1f | stop %.2f ATR | Q %.2f/%.2f\n",
+	fmt.Printf("%-12s n=%2d | range %.2f%% | PS->Test %.1f bars | Spring pen %.2f ATR | Spring->Test %.1f | Test->B(total) %.1f | stop %.2f ATR | Q %.2f/%.2f\n",
 		r.Name,r.Structures,r.AvgRangeWidthPct,r.AvgPSToTestBars,r.AvgSpringPenATR,r.AvgSpringToTestBars,r.AvgTestToBDecisionBars,r.AvgStopDistanceATR,r.AvgSpringQuality,r.AvgTestQuality)
 }
 
