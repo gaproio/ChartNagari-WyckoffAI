@@ -172,6 +172,37 @@ func main() {
 	}
 
 	fmt.Println()
+	fmt.Println("BTC 15M UTC entry-session concentration (DESCRIPTIVE; frozen rules unchanged):")
+	fmt.Println("Fixed 8-hour UTC blocks: 00-08, 08-16, and 16-24. Entry timestamps only; this is not a session filter.")
+	sessionNames := []string{"UTC 00-08", "UTC 08-16", "UTC 16-24"}
+	sessionTrades := make([]int, len(sessionNames))
+	sessionWins := make([]int, len(sessionNames))
+	sessionNet := make([]float64, len(sessionNames))
+	for _, t := range report.Trades {
+		hour := time.Unix(t.EntryTime, 0).UTC().Hour()
+		bucket := hour / 8
+		sessionTrades[bucket]++
+		sessionNet[bucket] += t.NetR
+		if t.NetR > 0 {
+			sessionWins[bucket]++
+		}
+	}
+	for i, name := range sessionNames {
+		avg := 0.0
+		winRate := 0.0
+		share := 0.0
+		if sessionTrades[i] > 0 {
+			avg = sessionNet[i] / float64(sessionTrades[i])
+			winRate = float64(sessionWins[i]) / float64(sessionTrades[i]) * 100
+		}
+		if seq.TotalNetR != 0 {
+			share = sessionNet[i] / seq.TotalNetR * 100
+		}
+		fmt.Printf("%-10s n=%2d | net-win %.1f%% | total %+.3fR avg %+.3fR | %.1f%% of total net\n",
+			name, sessionTrades[i], winRate, sessionNet[i], avg, share)
+	}
+
+	fmt.Println()
 	fmt.Println("BTC 15M cost-sensitivity diagnostic (ROBUSTNESS; frozen rules unchanged):")
 	fmt.Println("Rescales only the existing research cost assumption: 0x, 0.5x, 1x baseline, and 2x stress. This is not an exchange fee claim.")
 	for _, r := range wyckoff.ValidateBTCCostSensitivity(report) {
