@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -18,11 +19,11 @@ var yearHeaderR = regexp.MustCompile(`^(\d{4}):$`)
 var cohortR = regexp.MustCompile(`^\s*(B_ACCEPTED|B_REJECTED)\s+n=\s*(\d+)\s+\|\s+16h win\s+([0-9]+(?:\.[0-9]+)?)% avg\s+([+-]?[0-9]+(?:\.[0-9]+)?)%\s+\|\s+MFE\s+([+-]?[0-9]+(?:\.[0-9]+)?)% MAE\s+([+-]?[0-9]+(?:\.[0-9]+)?)%`)
 
 type cohortAggregate struct {
-	N       int
-	Wins    float64
-	RetSum  float64
-	MFESum  float64
-	MAESum  float64
+	N      int
+	Wins   float64
+	RetSum float64
+	MFESum float64
+	MAESum float64
 }
 
 type eraCohort struct {
@@ -143,6 +144,32 @@ func main() {
 	}
 	fmt.Printf("all %2d trades %+.3fR | minus largest winner: %2d trades %+.3fR avg %+.3fR | minus top 3 winners: %2d trades %+.3fR avg %+.3fR\n",
 		seq.Trades, seq.TotalNetR, seq.Trades-1, withoutLargest, avgWithoutLargest, seq.Trades-3, withoutTop3, avgWithoutTop3)
+
+	fmt.Println()
+	fmt.Println("BTC 15M calendar-year jackknife stress (DESCRIPTIVE; frozen rules unchanged):")
+	fmt.Println("Leaves out each calendar year's entire frozen-trade cohort one year at a time. This measures year concentration only; it is not an era filter.")
+	yearNet := map[int]float64{}
+	yearTrades := map[int]int{}
+	for _, t := range report.Trades {
+		year := time.Unix(t.EntryTime, 0).UTC().Year()
+		yearNet[year] += t.NetR
+		yearTrades[year]++
+	}
+	years := make([]int, 0, len(yearNet))
+	for year := range yearNet {
+		years = append(years, year)
+	}
+	sort.Ints(years)
+	for _, year := range years {
+		remainingTrades := seq.Trades - yearTrades[year]
+		remainingNet := seq.TotalNetR - yearNet[year]
+		remainingAvg := 0.0
+		if remainingTrades > 0 {
+			remainingAvg = remainingNet / float64(remainingTrades)
+		}
+		fmt.Printf("leave out %d: removed %2d trades %+.3fR | remaining %2d trades %+.3fR avg %+.3fR\n",
+			year, yearTrades[year], yearNet[year], remainingTrades, remainingNet, remainingAvg)
+	}
 
 	fmt.Println()
 	fmt.Println("BTC 15M cost-sensitivity diagnostic (ROBUSTNESS; frozen rules unchanged):")
