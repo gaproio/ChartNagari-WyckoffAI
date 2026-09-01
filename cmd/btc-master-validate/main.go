@@ -17,6 +17,14 @@ import (
 
 const binanceKlinesURL = "https://api.binance.com/api/v3/klines"
 
+type bComponentEra struct {
+	Name          string
+	Structures    int
+	Midpoint      int
+	ProspectiveHL int
+	Both          int
+}
+
 func main() {
 	days := flag.Int("days",2190,"history length in days")
 	endDate := flag.String("end","","history end date in UTC, YYYY-MM-DD (default: now)")
@@ -48,6 +56,7 @@ func main() {
 	riskDiag := wyckoff.ValidateBTCRiskDiagnostic(report)
 	volDiag := wyckoff.ValidateBTCVolatilityDiagnostic(bars,report)
 	geometryDiag := wyckoff.ValidateBTCAcceptedGeometryByEra(bars,v3)
+	componentDiag := validateBComponentIncidenceByEra(bars,v3)
 
 	fmt.Println("\nBTC MASTER REPORT — frozen B profile")
 	fmt.Printf("Window end: %s | days %d | bars %d | V3 structures %d\n",end.Format("2006-01-02"),*days,len(bars),len(v3.Events))
@@ -60,6 +69,10 @@ func main() {
 	fmt.Printf("V3 %d -> foundation %d -> Test %d -> midpoint %d -> B decision<=8 bars %d -> next-open history %d -> valid entry/stop %d -> trades %d\n",
 		f.V3Structures,f.FoundationRecovered,f.TestRecovered,f.MidpointValid,f.BDecisionFound,f.NextOpenAvailable,f.ValidEntryStop,f.Trades)
 	fmt.Printf("No B decision within 8 bars: %d of %d midpoint-valid structures\n",f.MidpointValid-f.BDecisionFound,f.MidpointValid)
+
+	fmt.Println("\nBTC 15M B-component incidence by fixed era (DESCRIPTIVE; frozen rules unchanged):")
+	fmt.Println("Within the frozen 8-bar post-signal window: midpoint reclaim, prospective-HL component, and their same-candle conjunction. Incidence only; no outcome filter.")
+	for _,r := range componentDiag { printBComponentEra(r) }
 
 	fmt.Println("\nB decision selection check (descriptive; common V3 next-open anchor):")
 	fmt.Println("Accepted/rejected label may use the next 8 candles; this section is NOT a tradable V3-time filter.")
@@ -120,6 +133,64 @@ func main() {
 		fmt.Printf("%s | %-11s 30D %+.1f%% | risk %.2f%% | %-6s exit %2d bars | gross %+.3fR net %+.3fR | 16h %+.2f%% | MFE %+.2f%% MAE %+.2f%%\n",
 			time.Unix(t.EntryTime,0).UTC().Format("2006-01-02 15:04"),t.Regime,t.RegimeReturn30,t.RiskPct,t.Outcome,t.ExitBars,t.GrossR,t.NetR,t.Return16H,t.MFE16H,t.MAE16H)
 	}
+}
+
+func validateBComponentIncidenceByEra(bars []models.OHLCV, validation wyckoff.V3ValidationSummary) []bComponentEra {
+	eras := []bComponentEra{{Name:"2017-2019"},{Name:"2020-2022"},{Name:"2023-2025"},{Name:"2026 PARTIAL"}}
+	for _,e := range validation.Events {
+		if e.BarIndex < 199 || e.BarIndex+1 >= len(bars) { continue }
+		start := e.BarIndex-199
+		a := wyckoff.AnalyzeV3Foundation(validation.Symbol,"15M",bars[start:e.BarIndex+1])
+		if !a.HasSpring || !a.HasTest { continue }
+		testLocal := -1
+		for _,ev := range a.Events {
+			if ev.Type == wyckoff.V3EventTest { testLocal=ev.BarIndex; break }
+		}
+		if testLocal < 0 { continue }
+		testGlobal := start+testLocal
+		if testGlobal < 0 || testGlobal >= len(bars) { continue }
+		midpoint := (a.Range.Support+a.Range.Resistance)/2
+		if midpoint <= 0 { continue }
+		idx := bComponentEraIndex(bars[e.BarIndex].OpenTime.UTC().Year())
+		if idx < 0 { continue }
+		eras[idx].Structures++
+		end := e.BarIndex+8
+		if end >= len(bars) { end=len(bars)-1 }
+		heldTestLow := true
+		midSeen,hlSeen,bothSeen := false,false,false
+		testLow := bars[testGlobal].Low
+		for i:=e.BarIndex+1; i<=end; i++ {
+			b := bars[i]
+			if b.Low <= testLow { heldTestLow=false }
+			mid := b.Close > midpoint
+			turningUp := b.Close>b.Open && b.Close>bars[i-1].Close
+			hl := heldTestLow && turningUp
+			if mid { midSeen=true }
+			if hl { hlSeen=true }
+			if mid && hl { bothSeen=true }
+		}
+		if midSeen { eras[idx].Midpoint++ }
+		if hlSeen { eras[idx].ProspectiveHL++ }
+		if bothSeen { eras[idx].Both++ }
+	}
+	return eras
+}
+
+func bComponentEraIndex(year int) int {
+	switch {
+	case year>=2017 && year<=2019: return 0
+	case year>=2020 && year<=2022: return 1
+	case year>=2023 && year<=2025: return 2
+	case year==2026: return 3
+	default: return -1
+	}
+}
+
+func printBComponentEra(r bComponentEra) {
+	if r.Structures==0 { fmt.Printf("%-12s n=0\n",r.Name); return }
+	n:=float64(r.Structures)
+	fmt.Printf("%-12s n=%3d | midpoint %3d (%.1f%%) | prospective-HL %3d (%.1f%%) | BOTH/B %3d (%.1f%%)\n",
+		r.Name,r.Structures,r.Midpoint,float64(r.Midpoint)/n*100,r.ProspectiveHL,float64(r.ProspectiveHL)/n*100,r.Both,float64(r.Both)/n*100)
 }
 
 func printStructureCohort(b wyckoff.BTCMasterStructureCohort) {
