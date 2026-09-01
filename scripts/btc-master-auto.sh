@@ -12,6 +12,26 @@ REPORT_DIR="research/btc15m"
 REPORT_FILE="${REPORT_DIR}/latest.txt"
 ERROR_FILE="${REPORT_DIR}/latest_error.txt"
 
+# launchd uses a minimal PATH, so resolve Go explicitly before running tests.
+# BTC_MASTER_GO can override this when Go is installed in a non-standard path.
+GO_BIN="${BTC_MASTER_GO:-}"
+if [[ -z "$GO_BIN" ]]; then
+  if command -v go >/dev/null 2>&1; then
+    GO_BIN="$(command -v go)"
+  else
+    for candidate in /usr/local/bin/go /usr/local/go/bin/go /opt/homebrew/bin/go; do
+      if [[ -x "$candidate" ]]; then
+        GO_BIN="$candidate"
+        break
+      fi
+    done
+  fi
+fi
+if [[ -z "$GO_BIN" || ! -x "$GO_BIN" ]]; then
+  echo "Go executable not found. Set BTC_MASTER_GO to the full path of go."
+  exit 127
+fi
+
 if ! git rev-parse --show-toplevel >/dev/null 2>&1; then
   echo "Run this command from inside the ChartNagari repository."
   exit 1
@@ -38,8 +58,8 @@ git pull --ff-only "$REMOTE" "$BRANCH"
 
 echo
 echo "== BTCUSDT / 15M tests =="
-go test ./internal/wyckoff
-go test ./...
+"$GO_BIN" test ./internal/wyckoff
+"$GO_BIN" test ./...
 
 mkdir -p "$REPORT_DIR"
 TMP_FILE="$(mktemp)"
@@ -54,7 +74,7 @@ trap 'rm -f "$TMP_FILE"' EXIT
   echo "# fee_bps_per_side: $FEE_BPS"
   echo "# slippage_bps_per_side: $SLIPPAGE_BPS"
   echo
-  go run ./cmd/btc-master-validate \
+  "$GO_BIN" run ./cmd/btc-master-validate \
     -days "$DAYS" \
     -end "$END_DATE" \
     -fee-bps "$FEE_BPS" \
@@ -66,7 +86,7 @@ trap - EXIT
 
 # Sequence/tail diagnostic parses the exact chronological trade lines already
 # printed above, so it adds no second market-data fetch and changes no rules.
-go run ./cmd/btc-sequence-report -file "$REPORT_FILE" | tee -a "$REPORT_FILE"
+"$GO_BIN" run ./cmd/btc-sequence-report -file "$REPORT_FILE" | tee -a "$REPORT_FILE"
 
 git add "$REPORT_FILE"
 if git ls-files --error-unmatch "$ERROR_FILE" >/dev/null 2>&1; then
