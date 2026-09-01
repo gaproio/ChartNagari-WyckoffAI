@@ -203,6 +203,38 @@ func main() {
 	}
 
 	fmt.Println()
+	fmt.Println("BTC 15M UTC weekday concentration (DESCRIPTIVE; frozen rules unchanged):")
+	fmt.Println("Entry timestamps grouped Monday-Sunday in UTC. This is a calendar concentration diagnostic, not a weekday filter.")
+	weekdayTrades := [7]int{}
+	weekdayWins := [7]int{}
+	weekdayNet := [7]float64{}
+	for _, t := range report.Trades {
+		wd := time.Unix(t.EntryTime, 0).UTC().Weekday()
+		idx := int(wd)
+		weekdayTrades[idx]++
+		weekdayNet[idx] += t.NetR
+		if t.NetR > 0 {
+			weekdayWins[idx]++
+		}
+	}
+	weekdayOrder := []time.Weekday{time.Monday, time.Tuesday, time.Wednesday, time.Thursday, time.Friday, time.Saturday, time.Sunday}
+	for _, wd := range weekdayOrder {
+		idx := int(wd)
+		avg := 0.0
+		winRate := 0.0
+		share := 0.0
+		if weekdayTrades[idx] > 0 {
+			avg = weekdayNet[idx] / float64(weekdayTrades[idx])
+			winRate = float64(weekdayWins[idx]) / float64(weekdayTrades[idx]) * 100
+		}
+		if seq.TotalNetR != 0 {
+			share = weekdayNet[idx] / seq.TotalNetR * 100
+		}
+		fmt.Printf("%-9s n=%2d | net-win %.1f%% | total %+.3fR avg %+.3fR | %.1f%% of total net\n",
+			wd.String(), weekdayTrades[idx], winRate, weekdayNet[idx], avg, share)
+	}
+
+	fmt.Println()
 	fmt.Println("BTC 15M cost-sensitivity diagnostic (ROBUSTNESS; frozen rules unchanged):")
 	fmt.Println("Rescales only the existing research cost assumption: 0x, 0.5x, 1x baseline, and 2x stress. This is not an exchange fee claim.")
 	for _, r := range wyckoff.ValidateBTCCostSensitivity(report) {
