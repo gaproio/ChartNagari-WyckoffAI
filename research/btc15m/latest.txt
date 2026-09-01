@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-01T05:00:15Z
-# git_commit_before_report: 0c1e42ba05a05f1beecac79ce19f5bd36fdbeb88
+# generated_utc: 2026-09-01T05:10:43Z
+# git_commit_before_report: 788e4a8c63dd079fc7ee66fd2fe646468ddbcbb6
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -158,6 +158,16 @@ positive/negative/flat 11/12/0 | largest winner +2.910R = 47.1% of total net | t
 BTC 15M winner-concentration stress (DESCRIPTIVE; frozen rules unchanged):
 Fixed leave-out stress removes the single largest winner and then the top three winners. This measures tail dependence only; it is not a trade filter.
 all 23 trades +6.178R | minus largest winner: 22 trades +3.268R avg +0.149R | minus top 3 winners: 20 trades -2.435R avg -0.122R
+
+BTC 15M calendar-year jackknife stress (DESCRIPTIVE; frozen rules unchanged):
+Leaves out each calendar year's entire frozen-trade cohort one year at a time. This measures year concentration only; it is not an era filter.
+leave out 2017: removed  5 trades -1.403R | remaining 18 trades +7.581R avg +0.421R
+leave out 2018: removed  7 trades -0.605R | remaining 16 trades +6.783R avg +0.424R
+leave out 2019: removed  2 trades -1.552R | remaining 21 trades +7.730R avg +0.368R
+leave out 2021: removed  5 trades +5.503R | remaining 18 trades +0.675R avg +0.037R
+leave out 2022: removed  1 trades +2.863R | remaining 22 trades +3.315R avg +0.151R
+leave out 2024: removed  1 trades -1.266R | remaining 22 trades +7.444R avg +0.338R
+leave out 2026: removed  2 trades +2.638R | remaining 21 trades +3.540R avg +0.169R
 
 BTC 15M cost-sensitivity diagnostic (ROBUSTNESS; frozen rules unchanged):
 Rescales only the existing research cost assumption: 0x, 0.5x, 1x baseline, and 2x stress. This is not an exchange fee claim.
