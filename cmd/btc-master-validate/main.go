@@ -23,6 +23,9 @@ type bComponentEra struct {
 	Midpoint      int
 	ProspectiveHL int
 	Both          int
+	MidDelaySum   int
+	HLDelaySum    int
+	BothDelaySum  int
 }
 
 func main() {
@@ -73,6 +76,10 @@ func main() {
 	fmt.Println("\nBTC 15M B-component incidence by fixed era (DESCRIPTIVE; frozen rules unchanged):")
 	fmt.Println("Within the frozen 8-bar post-signal window: midpoint reclaim, prospective-HL component, and their same-candle conjunction. Incidence only; no outcome filter.")
 	for _,r := range componentDiag { printBComponentEra(r) }
+
+	fmt.Println("\nBTC 15M B-component first-arrival latency by fixed era (DESCRIPTIVE; frozen rules unchanged):")
+	fmt.Println("Average first bar after the V3 signal for each existing B component among structures where that component appears within 8 bars. No outcome filter or timing rule change.")
+	for _,r := range componentDiag { printBComponentLatencyEra(r) }
 
 	fmt.Println("\nB decision selection check (descriptive; common V3 next-open anchor):")
 	fmt.Println("Accepted/rejected label may use the next 8 candles; this section is NOT a tradable V3-time filter.")
@@ -158,6 +165,7 @@ func validateBComponentIncidenceByEra(bars []models.OHLCV, validation wyckoff.V3
 		if end >= len(bars) { end=len(bars)-1 }
 		heldTestLow := true
 		midSeen,hlSeen,bothSeen := false,false,false
+		midDelay,hlDelay,bothDelay := 0,0,0
 		testLow := bars[testGlobal].Low
 		for i:=e.BarIndex+1; i<=end; i++ {
 			b := bars[i]
@@ -165,13 +173,13 @@ func validateBComponentIncidenceByEra(bars []models.OHLCV, validation wyckoff.V3
 			mid := b.Close > midpoint
 			turningUp := b.Close>b.Open && b.Close>bars[i-1].Close
 			hl := heldTestLow && turningUp
-			if mid { midSeen=true }
-			if hl { hlSeen=true }
-			if mid && hl { bothSeen=true }
+			if mid && !midSeen { midSeen=true; midDelay=i-e.BarIndex }
+			if hl && !hlSeen { hlSeen=true; hlDelay=i-e.BarIndex }
+			if mid && hl && !bothSeen { bothSeen=true; bothDelay=i-e.BarIndex }
 		}
-		if midSeen { eras[idx].Midpoint++ }
-		if hlSeen { eras[idx].ProspectiveHL++ }
-		if bothSeen { eras[idx].Both++ }
+		if midSeen { eras[idx].Midpoint++; eras[idx].MidDelaySum+=midDelay }
+		if hlSeen { eras[idx].ProspectiveHL++; eras[idx].HLDelaySum+=hlDelay }
+		if bothSeen { eras[idx].Both++; eras[idx].BothDelaySum+=bothDelay }
 	}
 	return eras
 }
@@ -191,6 +199,16 @@ func printBComponentEra(r bComponentEra) {
 	n:=float64(r.Structures)
 	fmt.Printf("%-12s n=%3d | midpoint %3d (%.1f%%) | prospective-HL %3d (%.1f%%) | BOTH/B %3d (%.1f%%)\n",
 		r.Name,r.Structures,r.Midpoint,float64(r.Midpoint)/n*100,r.ProspectiveHL,float64(r.ProspectiveHL)/n*100,r.Both,float64(r.Both)/n*100)
+}
+
+func printBComponentLatencyEra(r bComponentEra) {
+	if r.Structures==0 { fmt.Printf("%-12s n=0\n",r.Name); return }
+	midAvg,hlAvg,bothAvg := 0.0,0.0,0.0
+	if r.Midpoint>0 { midAvg=float64(r.MidDelaySum)/float64(r.Midpoint) }
+	if r.ProspectiveHL>0 { hlAvg=float64(r.HLDelaySum)/float64(r.ProspectiveHL) }
+	if r.Both>0 { bothAvg=float64(r.BothDelaySum)/float64(r.Both) }
+	fmt.Printf("%-12s | first midpoint %.2f bars (n=%d) | first prospective-HL %.2f bars (n=%d) | first BOTH/B %.2f bars (n=%d)\n",
+		r.Name,midAvg,r.Midpoint,hlAvg,r.ProspectiveHL,bothAvg,r.Both)
 }
 
 func printStructureCohort(b wyckoff.BTCMasterStructureCohort) {
