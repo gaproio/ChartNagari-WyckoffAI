@@ -88,6 +88,47 @@ trap - EXIT
 # printed above, so it adds no second market-data fetch and changes no rules.
 "$GO_BIN" run ./cmd/btc-sequence-report -file "$REPORT_FILE" | tee -a "$REPORT_FILE"
 
+# Rolling stability uses the same chronological frozen trade lines already in
+# the report. A fixed five-trade window is descriptive only and changes no rule.
+awk '
+  substr($1,5,1)=="-" && substr($1,8,1)=="-" && length($1)==10 && $3=="|" {
+    for (j=1; j<=NF; j++) {
+      if ($j=="net" && j<NF) {
+        v=$(j+1)
+        sub(/R$/, "", v)
+        n++
+        ts[n]=$1 " " $2
+        r[n]=v+0
+        break
+      }
+    }
+  }
+  END {
+    print ""
+    print "BTC 15M rolling 5-trade stability diagnostic (DESCRIPTIVE; frozen rules unchanged):"
+    print "Chronological overlapping five-trade windows. This measures local edge stability only; it is not a trade filter."
+    w=5
+    if (n<w) {
+      printf("insufficient trades: n=%d, need %d\n", n, w)
+      exit
+    }
+    windows=0; pos=0; neg=0; flat=0
+    for (s=1; s+w-1<=n; s++) {
+      e=s+w-1
+      sum=0
+      for (i=s; i<=e; i++) sum+=r[i]
+      avg=sum/w
+      windows++
+      if (avg>0) pos++; else if (avg<0) neg++; else flat++
+      if (windows==1 || avg<minAvg) { minAvg=avg; minStart=s; minEnd=e }
+      if (windows==1 || avg>maxAvg) { maxAvg=avg; maxStart=s; maxEnd=e }
+      printf("window %02d-%02d | %s -> %s | total %+.3fR avg %+.3fR\n", s, e, ts[s], ts[e], sum, avg)
+    }
+    printf("windows %d | positive/negative/flat %d/%d/%d | worst avg %+.3fR trades %02d-%02d | best avg %+.3fR trades %02d-%02d\n",
+      windows, pos, neg, flat, minAvg, minStart, minEnd, maxAvg, maxStart, maxEnd)
+  }
+' "$REPORT_FILE" | tee -a "$REPORT_FILE"
+
 git add "$REPORT_FILE"
 if git ls-files --error-unmatch "$ERROR_FILE" >/dev/null 2>&1; then
   git rm -f "$ERROR_FILE"
