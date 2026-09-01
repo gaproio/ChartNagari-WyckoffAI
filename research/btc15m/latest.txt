@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-01T04:10:07Z
-# git_commit_before_report: b6ffa6bb532b4ee134de3dfb8c7d4174a7a0cc2c
+# generated_utc: 2026-09-01T04:21:43Z
+# git_commit_before_report: 554fce553d28a63b0bf20d4207e5f38227857b19
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -101,11 +101,11 @@ RISKATR 3-6      n=  3 | T/S/X 0/1/2 | net-win 0.0% | ATR 0.779% pctile 52.7 | r
 RISKATR >6       n=  3 | T/S/X 0/0/3 | net-win 33.3% | ATR 0.996% pctile 57.6 | risk 11.67% = 14.31 ATR | net +0.007R | 16h +1.19% | MFE +4.61% MAE -1.37%
 
 BTC 15M accepted-geometry by fixed era (DESCRIPTIVE; no geometry/era filter):
-Exact frozen B-accepted structures only. Geometry is known by the B decision; fixed calendar eras match the temporal study.
-2017-2019    n=14 | range 4.64% | PS->Test 60.6 bars | Spring pen 0.51 ATR | Spring->Test 16.2 | Test->B 35.1 | stop 4.22 ATR | Q 0.82/0.63
-2020-2022    n= 6 | range 3.94% | PS->Test 26.7 bars | Spring pen 0.47 ATR | Spring->Test 4.0 | Test->B 2.3 | stop 1.94 ATR | Q 0.81/0.63
-2023-2025    n= 1 | range 2.16% | PS->Test 45.0 bars | Spring pen 1.33 ATR | Spring->Test 1.0 | Test->B 6.0 | stop 1.86 ATR | Q 0.78/0.57
-2026 PARTIAL n= 2 | range 3.43% | PS->Test 36.0 bars | Spring pen 1.08 ATR | Spring->Test 1.0 | Test->B 59.5 | stop 9.57 ATR | Q 0.80/0.58
+Exact frozen B-accepted structures only. Test->B(total) includes the pre-signal Test->V3 lag; the frozen <=8-bar confirmation clock starts at the causal V3 signal.
+2017-2019    n=14 | range 4.64% | PS->Test 60.6 bars | Spring pen 0.51 ATR | Spring->Test 16.2 | Test->B(total) 35.1 | stop 4.22 ATR | Q 0.82/0.63
+2020-2022    n= 6 | range 3.94% | PS->Test 26.7 bars | Spring pen 0.47 ATR | Spring->Test 4.0 | Test->B(total) 2.3 | stop 1.94 ATR | Q 0.81/0.63
+2023-2025    n= 1 | range 2.16% | PS->Test 45.0 bars | Spring pen 1.33 ATR | Spring->Test 1.0 | Test->B(total) 6.0 | stop 1.86 ATR | Q 0.78/0.57
+2026 PARTIAL n= 2 | range 3.43% | PS->Test 36.0 bars | Spring pen 1.08 ATR | Spring->Test 1.0 | Test->B(total) 59.5 | stop 9.57 ATR | Q 0.80/0.58
 
 Overall:
 ALL          n= 23 | T/S/X 3/8/12 | net-win 47.8% | gross +0.388R net +0.269R | 16h +0.322% | MFE +4.42% MAE -4.24% | risk 4.14% | exit 46.5 bars
