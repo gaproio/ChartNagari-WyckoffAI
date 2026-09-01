@@ -129,6 +129,22 @@ func main() {
 		seq.PositiveTrades, seq.NegativeTrades, seq.FlatTrades, seq.LargestWinnerR, seq.LargestWinnerSharePct, seq.Top3WinnersR, seq.Top3WinnersSharePct)
 
 	fmt.Println()
+	fmt.Println("BTC 15M winner-concentration stress (DESCRIPTIVE; frozen rules unchanged):")
+	fmt.Println("Fixed leave-out stress removes the single largest winner and then the top three winners. This measures tail dependence only; it is not a trade filter.")
+	withoutLargest := seq.TotalNetR - seq.LargestWinnerR
+	withoutTop3 := seq.TotalNetR - seq.Top3WinnersR
+	avgWithoutLargest := 0.0
+	avgWithoutTop3 := 0.0
+	if seq.Trades > 1 {
+		avgWithoutLargest = withoutLargest / float64(seq.Trades-1)
+	}
+	if seq.Trades > 3 {
+		avgWithoutTop3 = withoutTop3 / float64(seq.Trades-3)
+	}
+	fmt.Printf("all %2d trades %+.3fR | minus largest winner: %2d trades %+.3fR avg %+.3fR | minus top 3 winners: %2d trades %+.3fR avg %+.3fR\n",
+		seq.Trades, seq.TotalNetR, seq.Trades-1, withoutLargest, avgWithoutLargest, seq.Trades-3, withoutTop3, avgWithoutTop3)
+
+	fmt.Println()
 	fmt.Println("BTC 15M cost-sensitivity diagnostic (ROBUSTNESS; frozen rules unchanged):")
 	fmt.Println("Rescales only the existing research cost assumption: 0x, 0.5x, 1x baseline, and 2x stress. This is not an exchange fee claim.")
 	for _, r := range wyckoff.ValidateBTCCostSensitivity(report) {
