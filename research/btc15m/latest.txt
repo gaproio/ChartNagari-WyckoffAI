@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-01T05:53:27Z
-# git_commit_before_report: 6f97f41a8f9e04532f6a883fad94cda14c9f523e
+# generated_utc: 2026-09-02T04:50:47Z
+# git_commit_before_report: 018741f5b46291986a79772cd38293b295c6931a
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -23,6 +23,13 @@ Within the frozen 8-bar post-signal window: midpoint reclaim, prospective-HL com
 2020-2022    n= 44 | midpoint  10 (22.7%) | prospective-HL  26 (59.1%) | BOTH/B   6 (13.6%)
 2023-2025    n=  7 | midpoint   1 (14.3%) | prospective-HL   2 (28.6%) | BOTH/B   1 (14.3%)
 2026 PARTIAL n=  3 | midpoint   2 (66.7%) | prospective-HL   2 (66.7%) | BOTH/B   2 (66.7%)
+
+BTC 15M B-component first-arrival latency by fixed era (DESCRIPTIVE; frozen rules unchanged):
+Average first bar after the V3 signal for each existing B component among structures where that component appears within 8 bars. No outcome filter or timing rule change.
+2017-2019    | first midpoint 3.55 bars (n=20) | first prospective-HL 1.39 bars (n=31) | first BOTH/B 3.29 bars (n=14)
+2020-2022    | first midpoint 4.00 bars (n=10) | first prospective-HL 1.27 bars (n=26) | first BOTH/B 2.00 bars (n=6)
+2023-2025    | first midpoint 6.00 bars (n=1) | first prospective-HL 1.00 bars (n=2) | first BOTH/B 6.00 bars (n=1)
+2026 PARTIAL | first midpoint 1.00 bars (n=2) | first prospective-HL 1.00 bars (n=2) | first BOTH/B 1.00 bars (n=2)
 
 B decision selection check (descriptive; common V3 next-open anchor):
 Accepted/rejected label may use the next 8 candles; this section is NOT a tradable V3-time filter.
