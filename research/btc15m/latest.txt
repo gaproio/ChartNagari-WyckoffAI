@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-02T05:52:52Z
-# git_commit_before_report: f934ef907667564c5260aa9cc1c24f760274607f
+# generated_utc: 2026-09-02T06:35:00Z
+# git_commit_before_report: bbbda82a99aa7d854ba30517f3e8bbe1e8c0c362
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -170,6 +170,12 @@ Among structures where each component appears within the frozen 8-bar window, sh
 2020-2022    n= 44 | BOTH/midpoint  6/10 =  60.0% | BOTH/prospective-HL  6/26 =  23.1% | unmatched midpoint  4 | unmatched HL 20
 2023-2025    n=  7 | BOTH/midpoint  1/ 1 = 100.0% | BOTH/prospective-HL  1/ 2 =  50.0% | unmatched midpoint  0 | unmatched HL  1
 2026 PARTIAL n=  3 | BOTH/midpoint  2/ 2 = 100.0% | BOTH/prospective-HL  2/ 2 = 100.0% | unmatched midpoint  0 | unmatched HL  0
+
+BTC 15M B-rate fixed-era decomposition (DESCRIPTIVE; frozen rules unchanged):
+Decomposes 2017-2019 -> 2020-2022 change in BOTH/B incidence into midpoint-incidence and BOTH-given-midpoint conversion effects. Symmetric two-factor attribution; no outcome filter or rule change.
+2017-2019 midpoint 39.2% | BOTH/midpoint 70.0% | BOTH/B 27.5%
+2020-2022 midpoint 22.7% | BOTH/midpoint 60.0% | BOTH/B 13.6%
+B-rate change -13.81 pp | midpoint-incidence effect -10.72 pp (77.6% of change) | conversion effect -3.10 pp (22.4% of change)
 
 BTC 15M sequence/tail-dependence diagnostic (DESCRIPTIVE; frozen rules unchanged):
 Chronological NetR path of the exact frozen trades; measures concentration and drawdown, not a new filter.
