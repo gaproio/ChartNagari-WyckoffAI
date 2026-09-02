@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-02T04:50:47Z
-# git_commit_before_report: 018741f5b46291986a79772cd38293b295c6931a
+# generated_utc: 2026-09-02T05:52:52Z
+# git_commit_before_report: f934ef907667564c5260aa9cc1c24f760274607f
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -163,6 +163,13 @@ Trades:
 2024-04-16 06:45 | SIDEWAYS_30D 30D -3.1% | risk 1.13% | STOP   exit 14 bars | gross -1.000R net -1.266R | 16h +1.30% | MFE +2.22% MAE -2.17%
 2026-02-06 01:15 | BEAR_30D    30D -30.5% | risk 3.33% | TARGET exit 64 bars | gross +3.000R net +2.910R | 16h +10.26% | MFE +10.38% MAE -0.86%
 2026-06-27 09:00 | BEAR_30D    30D -17.5% | risk 3.37% | TIME   exit 64 bars | gross -0.183R net -0.272R | 16h -0.62% | MFE +0.80% MAE -0.99%
+
+BTC 15M B-component conjunction conversion by fixed era (DESCRIPTIVE; frozen rules unchanged):
+Among structures where each component appears within the frozen 8-bar window, shows how often that component participates in an actual same-candle BOTH/B event. No outcome filter or rule change.
+2017-2019    n= 51 | BOTH/midpoint 14/20 =  70.0% | BOTH/prospective-HL 14/31 =  45.2% | unmatched midpoint  6 | unmatched HL 17
+2020-2022    n= 44 | BOTH/midpoint  6/10 =  60.0% | BOTH/prospective-HL  6/26 =  23.1% | unmatched midpoint  4 | unmatched HL 20
+2023-2025    n=  7 | BOTH/midpoint  1/ 1 = 100.0% | BOTH/prospective-HL  1/ 2 =  50.0% | unmatched midpoint  0 | unmatched HL  1
+2026 PARTIAL n=  3 | BOTH/midpoint  2/ 2 = 100.0% | BOTH/prospective-HL  2/ 2 = 100.0% | unmatched midpoint  0 | unmatched HL  0
 
 BTC 15M sequence/tail-dependence diagnostic (DESCRIPTIVE; frozen rules unchanged):
 Chronological NetR path of the exact frozen trades; measures concentration and drawdown, not a new filter.
