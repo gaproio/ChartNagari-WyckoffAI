@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-03T04:06:33Z
-# git_commit_before_report: 78e805fe258efd8a5a63416dcccfed6944afed06
+# generated_utc: 2026-09-03T05:49:01Z
+# git_commit_before_report: 058e55ed1a91d8d9998d7c17d89f247cf35ebb7b
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -198,18 +198,18 @@ Compares pooled B incidence with an equal-weight mean of each calendar year's in
 2020-2022 pooled  13.6% | year-balanced  10.9% | yearly 2020 0/12=0.0% 2021 5/22=22.7% 2022 1/10=10.0%
 2020-2022 minus 2017-2019: pooled -13.8 pp | year-balanced -17.9 pp
 
-BTC 15M B-rate calendar-year jackknife by fixed era (DESCRIPTIVE; frozen rules unchanged):
-Leaves out one calendar year at a time from 2017-2019 and 2020-2022 B incidence. Accepted/(accepted+rejected) only; no outcome filter or era rule.
-2017-2019 base 14/51 =  27.5%
-  leave out 2017:  9/31 =  29.0% | removed 5/20
-  leave out 2018:  7/26 =  26.9% | removed 7/25
-  leave out 2019: 12/45 =  26.7% | removed 2/6
-  jackknife range 26.7% to 29.0%
-2020-2022 base  6/44 =  13.6%
-  leave out 2020:  6/32 =  18.8% | removed 0/12
-  leave out 2021:  1/22 =   4.5% | removed 5/22
-  leave out 2022:  5/34 =  14.7% | removed 1/10
-  jackknife range 4.5% to 18.8%
+BTC 15M B-rate leave-one-year-out robustness (DESCRIPTIVE; frozen rules unchanged):
+Recomputes pooled B incidence after omitting one calendar year at a time inside each well-populated fixed era. Accepted/(accepted+rejected) only; no outcome filter or threshold tuning.
+2017-2019 omit 2017 ->  29.0%
+2017-2019 omit 2018 ->  26.9%
+2017-2019 omit 2019 ->  26.7%
+2020-2022 omit 2020 ->  18.8%
+2020-2022 omit 2021 ->   4.5%
+2020-2022 omit 2022 ->  14.7%
+Cross-era delta under matched single-year omissions (later minus early):
+omit 2017 / 2020 -> -10.3 pp
+omit 2018 / 2021 -> -22.4 pp
+omit 2019 / 2022 -> -12.0 pp
 
 BTC 15M sequence/tail-dependence diagnostic (DESCRIPTIVE; frozen rules unchanged):
 Chronological NetR path of the exact frozen trades; measures concentration and drawdown, not a new filter.
