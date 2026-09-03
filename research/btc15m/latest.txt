@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-03T05:49:01Z
-# git_commit_before_report: 058e55ed1a91d8d9998d7c17d89f247cf35ebb7b
+# generated_utc: 2026-09-03T08:40:06Z
+# git_commit_before_report: bad19029743c1faca79940377b97a16866b45bdc
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -197,6 +197,12 @@ Compares pooled B incidence with an equal-weight mean of each calendar year's in
 2017-2019 pooled  27.5% | year-balanced  28.8% | yearly 2017 5/20=25.0% 2018 7/25=28.0% 2019 2/6=33.3%
 2020-2022 pooled  13.6% | year-balanced  10.9% | yearly 2020 0/12=0.0% 2021 5/22=22.7% 2022 1/10=10.0%
 2020-2022 minus 2017-2019: pooled -13.8 pp | year-balanced -17.9 pp
+
+BTC 15M B-rate calendar-year block permutation diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Treats 2017-2022 calendar years as six fixed blocks and exhaustively reallocates three years per side. Uses equal-weight yearly B incidence only; no outcome filter, threshold tuning, or baseline change.
+Observed chronological 2020-2022 minus 2017-2019 year-balanced delta: -17.9 pp
+All 3-vs-3 year allocations: 20 | abs(delta) >= observed: 2/20 (10.0%) | permutation delta range -17.9 to +17.9 pp
+Interpretation: small six-year block count makes this a bounded robustness/placebo diagnostic, not a significance gate.
 
 BTC 15M B-rate leave-one-year-out robustness (DESCRIPTIVE; frozen rules unchanged):
 Recomputes pooled B incidence after omitting one calendar year at a time inside each well-populated fixed era. Accepted/(accepted+rejected) only; no outcome filter or threshold tuning.
