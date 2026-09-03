@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-03T09:42:16Z
-# git_commit_before_report: aadead24a1a4c39754574e3606f60b23040c351d
+# generated_utc: 2026-09-03T10:44:20Z
+# git_commit_before_report: f7bfed813e7f2f403a81782b5f200fa7689d5004
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -225,6 +225,18 @@ Cross-era delta under matched single-year omissions (later minus early):
 omit 2017 / 2020 -> -10.3 pp
 omit 2018 / 2021 -> -22.4 pp
 omit 2019 / 2022 -> -12.0 pp
+
+BTC 15M B-rate six-year monotonic-trend permutation diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Uses equal-weight calendar-year B incidence for 2017-2022 and an exact permutation of the six yearly ranks. This tests chronological monotonic association only; no outcome filter, threshold tuning, or baseline change.
+2017 B incidence: 25.0%
+2018 B incidence: 28.0%
+2019 B incidence: 33.3%
+2020 B incidence: 0.0%
+2021 B incidence: 22.7%
+2022 B incidence: 10.0%
+Observed Spearman rho(year, B incidence): -0.600
+Exact two-sided rank permutations: abs(rho) >= observed in 174/720 (24.2%)
+Interpretation: this complements the contiguous-window check by asking whether the six annual rates form a broadly monotonic chronological trend rather than relying on a single era boundary. Small year count means descriptive robustness only.
 
 BTC 15M sequence/tail-dependence diagnostic (DESCRIPTIVE; frozen rules unchanged):
 Chronological NetR path of the exact frozen trades; measures concentration and drawdown, not a new filter.
