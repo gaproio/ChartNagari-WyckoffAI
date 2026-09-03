@@ -35,7 +35,7 @@ func (b *cancelOnCloseBody) Close() error {
 
 func (t *boundedRetryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	const attempts = 3
-	const attemptTimeout = 6 * time.Second
+	const attemptTimeout = 15 * time.Second
 
 	var lastErr error
 	for i := 0; i < attempts; i++ {
