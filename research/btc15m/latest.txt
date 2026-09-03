@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-03T10:44:20Z
-# git_commit_before_report: f7bfed813e7f2f403a81782b5f200fa7689d5004
+# generated_utc: 2026-09-03T14:32:02Z
+# git_commit_before_report: 3a2b2590364ed40cf4002dae200d71c891265229
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -183,6 +183,19 @@ Wilson 95% intervals for the two factors in the fixed-era B-rate decomposition: 
 2020-2022    midpoint 10/44 =  22.7% | Wilson 12.8% to 37.0% ; BOTH|midpoint  6/10 =  60.0% | Wilson 31.3% to 83.2%
 2020-2022 minus 2017-2019 midpoint incidence: -16.5 pp | conservative Wilson-bound interval -40.1 to +10.0 pp
 2020-2022 minus 2017-2019 BOTH|midpoint conversion: -10.0 pp | conservative Wilson-bound interval -54.2 to +35.1 pp
+
+BTC 15M B-rate leave-one-year-out diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Drops one calendar year from each fixed era in all 3x3 combinations, then recomputes pooled BOTH/B incidence. This tests whether the era gap depends on any single year; no outcome filter or rule change.
+omit 2017 / 2020 | early  29.0% | later  18.8% | later-early -10.3 pp
+omit 2017 / 2021 | early  29.0% | later   4.5% | later-early -24.5 pp
+omit 2017 / 2022 | early  29.0% | later  14.7% | later-early -14.3 pp
+omit 2018 / 2020 | early  26.9% | later  18.8% | later-early  -8.2 pp
+omit 2018 / 2021 | early  26.9% | later   4.5% | later-early -22.4 pp
+omit 2018 / 2022 | early  26.9% | later  14.7% | later-early -12.2 pp
+omit 2019 / 2020 | early  26.7% | later  18.8% | later-early  -7.9 pp
+omit 2019 / 2021 | early  26.7% | later   4.5% | later-early -22.1 pp
+omit 2019 / 2022 | early  26.7% | later  14.7% | later-early -12.0 pp
+gap range across 9 bounded omissions: -24.5 to  -7.9 pp | later<=early in 9/9 combinations
 
 BTC 15M B-rate sampling-uncertainty diagnostic (DESCRIPTIVE; frozen rules unchanged):
 Wilson 95% intervals for fixed-era BOTH/B incidence. This checks whether apparent era shifts are precise enough to interpret; it is not a filter or significance gate.
