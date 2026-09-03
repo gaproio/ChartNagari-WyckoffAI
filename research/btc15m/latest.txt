@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-03T08:40:06Z
-# git_commit_before_report: bad19029743c1faca79940377b97a16866b45bdc
+# generated_utc: 2026-09-03T09:42:16Z
+# git_commit_before_report: aadead24a1a4c39754574e3606f60b23040c351d
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -203,6 +203,15 @@ Treats 2017-2022 calendar years as six fixed blocks and exhaustively reallocates
 Observed chronological 2020-2022 minus 2017-2019 year-balanced delta: -17.9 pp
 All 3-vs-3 year allocations: 20 | abs(delta) >= observed: 2/20 (10.0%) | permutation delta range -17.9 to +17.9 pp
 Interpretation: small six-year block count makes this a bounded robustness/placebo diagnostic, not a significance gate.
+
+BTC 15M B-rate contiguous 3-year window diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Slides the same equal-weight three-calendar-year B-incidence summary one year at a time across 2017-2022. This checks boundary sensitivity of the fixed-era contrast; no outcome filter, threshold tuning, or rule change.
+2017-2019 year-balanced B incidence: 28.8%
+2018-2020 year-balanced B incidence: 20.4%
+2019-2021 year-balanced B incidence: 18.7%
+2020-2022 year-balanced B incidence: 10.9%
+Adjacent window changes: 2018-2020 minus 2017-2019 -8.3 pp | 2019-2021 minus 2018-2020 -1.8 pp | 2020-2022 minus 2019-2021 -7.8 pp
+Interpretation: use the path to judge whether the era shift is gradual or depends strongly on the 2019/2020 boundary; this is descriptive only.
 
 BTC 15M B-rate leave-one-year-out robustness (DESCRIPTIVE; frozen rules unchanged):
 Recomputes pooled B incidence after omitting one calendar year at a time inside each well-populated fixed era. Accepted/(accepted+rejected) only; no outcome filter or threshold tuning.
