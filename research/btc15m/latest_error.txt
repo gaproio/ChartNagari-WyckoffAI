@@ -1,0 +1,60 @@
+# BTCUSDT / 15M autonomous loop failure
+# generated_utc: 2026-09-03T04:48:38Z
+# source_commit: 3094e38a57a6e1341afa5a5bf5d90b03a49921cc
+# exit_status: 1
+
+From https://github.com/gaproio/ChartNagari-WyckoffAI
+ * branch            wyckoff-v2 -> FETCH_HEAD
+Already up to date.
+
+== BTCUSDT / 15M tests ==
+ok  	github.com/Ju571nK/Chatter/internal/wyckoff	(cached)
+?   	github.com/Ju571nK/Chatter/cmd/btc-master-validate	[no test files]
+# github.com/Ju571nK/Chatter/cmd/btc-sequence-report
+cmd/btc-sequence-report/b_rate_year_balanced.go:35:20: undefined: bYearCounts
+cmd/btc-sequence-report/b_rate_year_balanced.go:52:11: undefined: bYearHeaderR
+cmd/btc-sequence-report/b_rate_year_balanced.go:59:8: undefined: bYearCountR
+cmd/btc-sequence-report/b_rate_year_balanced.go:78:6: undefined: completeBYearEra
+cmd/btc-sequence-report/b_rate_year_balanced.go:94:40: undefined: bYearCounts
+cmd/btc-sequence-report/b_rate_year_balanced.go:107:69: undefined: bYearCounts
+FAIL	github.com/Ju571nK/Chatter/cmd/btc-sequence-report [build failed]
+ok  	github.com/Ju571nK/Chatter/cmd/chartnagari-mcp	(cached)
+?   	github.com/Ju571nK/Chatter/cmd/plugin-alpaca	[no test files]
+?   	github.com/Ju571nK/Chatter/cmd/server	[no test files]
+?   	github.com/Ju571nK/Chatter/cmd/wyckoff-v2-validate	[no test files]
+?   	github.com/Ju571nK/Chatter/cmd/wyckoff-v3-validate	[no test files]
+?   	github.com/Ju571nK/Chatter/internal/analyst	[no test files]
+ok  	github.com/Ju571nK/Chatter/internal/api	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/backtest	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/calendar	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/collector	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/config	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/engine	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/execution	(cached)
+?   	github.com/Ju571nK/Chatter/internal/history	[no test files]
+?   	github.com/Ju571nK/Chatter/internal/hub	[no test files]
+ok  	github.com/Ju571nK/Chatter/internal/indicator	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/interpreter	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/llm	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/market	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/marks	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/mcp	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/methodology/candlestick	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/methodology/general_ta	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/methodology/ict	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/methodology/smc	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/methodology/wyckoff	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/notifier	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/ollama	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/paper	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/pinescript	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/pipeline	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/plugins/alpaca	(cached)
+?   	github.com/Ju571nK/Chatter/internal/pricealert	[no test files]
+ok  	github.com/Ju571nK/Chatter/internal/report	(cached)
+?   	github.com/Ju571nK/Chatter/internal/rule	[no test files]
+ok  	github.com/Ju571nK/Chatter/internal/sequence	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/storage	(cached)
+ok  	github.com/Ju571nK/Chatter/internal/wyckoff	(cached)
+ok  	github.com/Ju571nK/Chatter/pkg/models	(cached)
+FAIL
