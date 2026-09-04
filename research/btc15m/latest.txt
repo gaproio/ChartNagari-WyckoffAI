@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-04T06:34:06Z
-# git_commit_before_report: 089edfc69f9ea261aede81b2773d9f9ac5f9b7d2
+# generated_utc: 2026-09-04T07:41:10Z
+# git_commit_before_report: 76205fd0c1f9df508498f741795c453770cb34c1
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -255,6 +255,19 @@ Uses equal-weight calendar-year B incidence for 2017-2022 and an exact permutati
 Observed Spearman rho(year, B incidence): -0.600
 Exact two-sided rank permutations: abs(rho) >= observed in 174/720 (24.2%)
 Interpretation: this complements the contiguous-window check by asking whether the six annual rates form a broadly monotonic chronological trend rather than relying on a single era boundary. Small year count means descriptive robustness only.
+
+BTC 15M UTC 08-16 single-trade jackknife (DESCRIPTIVE; frozen rules unchanged):
+Within the 08-16 UTC entry block only, removes each frozen trade once and recomputes remaining NetR/PF. This tests single-observation dependence; it does not create a trade/session filter.
+omit 2017-10-22 14:15 (+0.462R) | remaining  8 trades +5.373R avg +0.672R | net-win 50.0% | PF 3.07
+omit 2017-12-01 15:30 (+0.326R) | remaining  8 trades +5.509R avg +0.689R | net-win 50.0% | PF 3.12
+omit 2017-12-11 13:00 (-0.034R) | remaining  8 trades +5.869R avg +0.734R | net-win 62.5% | PF 3.29
+omit 2018-03-09 10:30 (+1.939R) | remaining  8 trades +3.896R avg +0.487R | net-win 50.0% | PF 2.50
+omit 2018-03-30 08:00 (-1.074R) | remaining  8 trades +6.909R avg +0.864R | net-win 62.5% | PF 5.54
+omit 2018-12-05 08:45 (-1.215R) | remaining  8 trades +7.050R avg +0.881R | net-win 62.5% | PF 6.11
+omit 2021-06-24 09:00 (+2.840R) | remaining  8 trades +2.995R avg +0.374R | net-win 50.0% | PF 2.15
+omit 2022-01-24 14:45 (+2.863R) | remaining  8 trades +2.972R avg +0.371R | net-win 50.0% | PF 2.15
+omit 2026-06-27 09:00 (-0.272R) | remaining  8 trades +6.107R avg +0.763R | net-win 62.5% | PF 3.63
+jackknife remaining-NetR range: +2.972R to +7.050R across 9 omissions
 
 BTC 15M UTC 08-16 leave-one-year-out concentration stress (DESCRIPTIVE; frozen rules unchanged):
 Within the 08-16 UTC entry block only, removes each represented calendar year in turn and recomputes remaining NetR. This tests whether session concentration depends on one year; it does not create a year/session filter.
