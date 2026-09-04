@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-04T08:43:14Z
-# git_commit_before_report: e5862a586f68b8179c757bb8ea20fdac115a6bb7
+# generated_utc: 2026-09-04T09:45:21Z
+# git_commit_before_report: e01bf96001d707fe115ebb1badf228ee07553db0
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -255,6 +255,12 @@ Uses equal-weight calendar-year B incidence for 2017-2022 and an exact permutati
 Observed Spearman rho(year, B incidence): -0.600
 Exact two-sided rank permutations: abs(rho) >= observed in 174/720 (24.2%)
 Interpretation: this complements the contiguous-window check by asking whether the six annual rates form a broadly monotonic chronological trend rather than relying on a single era boundary. Small year count means descriptive robustness only.
+
+BTC 15M UTC 08-16 leave-one-regime-out stress (DESCRIPTIVE; frozen rules unchanged):
+Within the 08-16 UTC entry block only, removes each represented causal 30D regime cohort once and recomputes remaining NetR/PF. This tests regime concentration inside the session; it does not create a regime/session filter.
+omit BEAR_30D     | removed  5 trades +3.142R | remaining  4 trades +2.693R avg +0.673R | net-win 75.0% | PF 80.21
+omit BULL_30D     | removed  4 trades +2.693R | remaining  5 trades +3.142R avg +0.628R | net-win 40.0% | PF 2.23
+regime-jackknife remaining-NetR range: +2.693R to +3.142R across 2 represented regimes
 
 BTC 15M UTC 08-16 single-trade jackknife (DESCRIPTIVE; frozen rules unchanged):
 Within the 08-16 UTC entry block only, removes each frozen trade once and recomputes remaining NetR/PF. This tests single-observation dependence; it does not create a trade/session filter.
