@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-04T11:07:41Z
-# git_commit_before_report: 227454c040f4eaaba41558ce41476943ab3fe4eb
+# generated_utc: 2026-09-04T20:40:34Z
+# git_commit_before_report: 8f52e1126e8e1cae34703984a851b768ce6ac9f5
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -281,6 +281,13 @@ omit 2021-06-24 09:00 (+2.840R) | remaining  8 trades +2.995R avg +0.374R | net-
 omit 2022-01-24 14:45 (+2.863R) | remaining  8 trades +2.972R avg +0.371R | net-win 50.0% | PF 2.15
 omit 2026-06-27 09:00 (-0.272R) | remaining  8 trades +6.107R avg +0.763R | net-win 62.5% | PF 3.63
 jackknife remaining-NetR range: +2.972R to +7.050R across 9 omissions
+
+BTC 15M UTC 08-16 leave-one-2H-block-out stress (DESCRIPTIVE; frozen rules unchanged):
+Within the 08-16 UTC entry block only, removes each fixed 2-hour UTC entry cohort once and recomputes remaining NetR/PF. This tests intraday concentration; it does not create a sub-session filter.
+omit 08-10 UTC | removed  4 trades +0.279R | remaining  5 trades +5.556R avg +1.111R | net-win 80.0% | PF 164.41
+omit 10-12 UTC | removed  1 trades +1.939R | remaining  8 trades +3.896R avg +0.487R | net-win 50.0% | PF 2.50
+omit 12-14 UTC | removed  1 trades -0.034R | remaining  8 trades +5.869R avg +0.734R | net-win 62.5% | PF 3.29
+omit 14-16 UTC | removed  3 trades +3.651R | remaining  6 trades +2.184R avg +0.364R | net-win 33.3% | PF 1.84
 
 BTC 15M UTC 08-16 leave-one-weekday-out stress (DESCRIPTIVE; frozen rules unchanged):
 Within the 08-16 UTC entry block only, removes each represented UTC weekday cohort once and recomputes remaining NetR/PF. This tests calendar concentration inside the session; it does not create a weekday/session filter.
