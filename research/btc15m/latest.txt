@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-04T09:45:21Z
-# git_commit_before_report: e01bf96001d707fe115ebb1badf228ee07553db0
+# generated_utc: 2026-09-04T11:07:41Z
+# git_commit_before_report: 227454c040f4eaaba41558ce41476943ab3fe4eb
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -255,6 +255,13 @@ Uses equal-weight calendar-year B incidence for 2017-2022 and an exact permutati
 Observed Spearman rho(year, B incidence): -0.600
 Exact two-sided rank permutations: abs(rho) >= observed in 174/720 (24.2%)
 Interpretation: this complements the contiguous-window check by asking whether the six annual rates form a broadly monotonic chronological trend rather than relying on a single era boundary. Small year count means descriptive robustness only.
+
+BTC 15M UTC 08-16 transaction-cost stress (DESCRIPTIVE; frozen rules unchanged):
+Exact same 08-16 UTC frozen trades re-priced at fixed multiples of baseline friction. Baseline cost is inferred trade-by-trade as grossR-netR; no signals, fills, stops, targets or holding rules change.
+cost x1.0 | n= 9 | NetR +5.835R avg +0.648R | net-win 55.6% | PF 3.25 | total friction 1.012R
+cost x1.5 | n= 9 | NetR +5.329R avg +0.592R | net-win 55.6% | PF 2.91 | total friction 1.518R
+cost x2.0 | n= 9 | NetR +4.823R avg +0.536R | net-win 55.6% | PF 2.61 | total friction 2.024R
+cost x3.0 | n= 9 | NetR +3.811R avg +0.423R | net-win 55.6% | PF 2.13 | total friction 3.036R
 
 BTC 15M UTC 08-16 leave-one-regime-out stress (DESCRIPTIVE; frozen rules unchanged):
 Within the 08-16 UTC entry block only, removes each represented causal 30D regime cohort once and recomputes remaining NetR/PF. This tests regime concentration inside the session; it does not create a regime/session filter.
