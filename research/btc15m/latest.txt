@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-04T07:41:10Z
-# git_commit_before_report: 76205fd0c1f9df508498f741795c453770cb34c1
+# generated_utc: 2026-09-04T08:43:14Z
+# git_commit_before_report: e5862a586f68b8179c757bb8ea20fdac115a6bb7
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -268,6 +268,16 @@ omit 2021-06-24 09:00 (+2.840R) | remaining  8 trades +2.995R avg +0.374R | net-
 omit 2022-01-24 14:45 (+2.863R) | remaining  8 trades +2.972R avg +0.371R | net-win 50.0% | PF 2.15
 omit 2026-06-27 09:00 (-0.272R) | remaining  8 trades +6.107R avg +0.763R | net-win 62.5% | PF 3.63
 jackknife remaining-NetR range: +2.972R to +7.050R across 9 omissions
+
+BTC 15M UTC 08-16 leave-one-weekday-out stress (DESCRIPTIVE; frozen rules unchanged):
+Within the 08-16 UTC entry block only, removes each represented UTC weekday cohort once and recomputes remaining NetR/PF. This tests calendar concentration inside the session; it does not create a weekday/session filter.
+omit Monday    | removed  2 trades +2.829R | remaining  7 trades +3.006R avg +0.429R | net-win 57.1% | PF 2.17
+omit Wednesday | removed  1 trades -1.215R | remaining  8 trades +7.050R avg +0.881R | net-win 62.5% | PF 6.11
+omit Thursday  | removed  1 trades +2.840R | remaining  8 trades +2.995R avg +0.374R | net-win 50.0% | PF 2.15
+omit Friday    | removed  3 trades +1.191R | remaining  6 trades +4.644R avg +0.774R | net-win 50.0% | PF 4.05
+omit Saturday  | removed  1 trades -0.272R | remaining  8 trades +6.107R avg +0.763R | net-win 62.5% | PF 3.63
+omit Sunday    | removed  1 trades +0.462R | remaining  8 trades +5.373R avg +0.672R | net-win 50.0% | PF 3.07
+weekday-jackknife remaining-NetR range: +2.995R to +7.050R across 6 represented weekdays
 
 BTC 15M UTC 08-16 leave-one-year-out concentration stress (DESCRIPTIVE; frozen rules unchanged):
 Within the 08-16 UTC entry block only, removes each represented calendar year in turn and recomputes remaining NetR. This tests whether session concentration depends on one year; it does not create a year/session filter.
