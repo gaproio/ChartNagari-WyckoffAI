@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-03T14:32:02Z
-# git_commit_before_report: 3a2b2590364ed40cf4002dae200d71c891265229
+# generated_utc: 2026-09-04T04:29:52Z
+# git_commit_before_report: 9224ac1f126f32e4b5552d6113f80ea2064a7cef
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -225,6 +225,11 @@ Slides the same equal-weight three-calendar-year B-incidence summary one year at
 2020-2022 year-balanced B incidence: 10.9%
 Adjacent window changes: 2018-2020 minus 2017-2019 -8.3 pp | 2019-2021 minus 2018-2020 -1.8 pp | 2020-2022 minus 2019-2021 -7.8 pp
 Interpretation: use the path to judge whether the era shift is gradual or depends strongly on the 2019/2020 boundary; this is descriptive only.
+
+BTC 15M B-rate calendar-year block randomization diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Enumerates all 20 ways to split 2017-2022 into two 3-year blocks, preserving each year's accepted/rejected counts. The observed era gap is compared with this bounded year-block null; no outcome filter or rule change.
+observed 2020-2022 minus 2017-2019: -13.8 pp | all-split gap range -14.7 to +14.7 pp | median  +0.0 pp
+two-sided block-randomization extremeness: 4/20 assignments have |gap| >= observed |gap| (exact enumeration proportion 0.200)
 
 BTC 15M B-rate leave-one-year-out robustness (DESCRIPTIVE; frozen rules unchanged):
 Recomputes pooled B incidence after omitting one calendar year at a time inside each well-populated fixed era. Accepted/(accepted+rejected) only; no outcome filter or threshold tuning.
