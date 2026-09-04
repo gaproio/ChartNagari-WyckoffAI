@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-04T05:52:02Z
-# git_commit_before_report: 45a8bc58a85f52869154ebb40666ff5801336ce5
+# generated_utc: 2026-09-04T06:34:06Z
+# git_commit_before_report: 089edfc69f9ea261aede81b2773d9f9ac5f9b7d2
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -255,6 +255,14 @@ Uses equal-weight calendar-year B incidence for 2017-2022 and an exact permutati
 Observed Spearman rho(year, B incidence): -0.600
 Exact two-sided rank permutations: abs(rho) >= observed in 174/720 (24.2%)
 Interpretation: this complements the contiguous-window check by asking whether the six annual rates form a broadly monotonic chronological trend rather than relying on a single era boundary. Small year count means descriptive robustness only.
+
+BTC 15M UTC 08-16 leave-one-year-out concentration stress (DESCRIPTIVE; frozen rules unchanged):
+Within the 08-16 UTC entry block only, removes each represented calendar year in turn and recomputes remaining NetR. This tests whether session concentration depends on one year; it does not create a year/session filter.
+omit 2017 | removed  3 trades +0.754R | remaining  6 trades +5.081R avg +0.847R | net-win 50.0% | PF 2.98
+omit 2018 | removed  3 trades -0.350R | remaining  6 trades +6.185R avg +1.031R | net-win 66.7% | PF 21.21
+omit 2021 | removed  1 trades +2.840R | remaining  8 trades +2.995R avg +0.374R | net-win 50.0% | PF 2.15
+omit 2022 | removed  1 trades +2.863R | remaining  8 trades +2.972R avg +0.371R | net-win 50.0% | PF 2.15
+omit 2026 | removed  1 trades -0.272R | remaining  8 trades +6.107R avg +0.763R | net-win 62.5% | PF 3.63
 
 BTC 15M UTC session leave-one-block-out stress (DESCRIPTIVE; frozen rules unchanged):
 Removes each fixed 8-hour UTC entry block in turn and recomputes the remaining frozen-trade NetR path. This tests session concentration only; it does not create a session filter.
