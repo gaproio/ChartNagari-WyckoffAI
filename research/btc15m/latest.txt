@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-04T04:29:52Z
-# git_commit_before_report: 9224ac1f126f32e4b5552d6113f80ea2064a7cef
+# generated_utc: 2026-09-04T05:52:02Z
+# git_commit_before_report: 45a8bc58a85f52869154ebb40666ff5801336ce5
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -255,6 +255,12 @@ Uses equal-weight calendar-year B incidence for 2017-2022 and an exact permutati
 Observed Spearman rho(year, B incidence): -0.600
 Exact two-sided rank permutations: abs(rho) >= observed in 174/720 (24.2%)
 Interpretation: this complements the contiguous-window check by asking whether the six annual rates form a broadly monotonic chronological trend rather than relying on a single era boundary. Small year count means descriptive robustness only.
+
+BTC 15M UTC session leave-one-block-out stress (DESCRIPTIVE; frozen rules unchanged):
+Removes each fixed 8-hour UTC entry block in turn and recomputes the remaining frozen-trade NetR path. This tests session concentration only; it does not create a session filter.
+omit UTC 00-08 | removed  5 trades -1.008R | remaining 18 trades +7.186R avg +0.399R | net-win 55.6% | PF 2.13
+omit UTC 08-16 | removed  9 trades +5.835R | remaining 14 trades +0.343R avg +0.025R | net-win 42.9% | PF 1.04
+omit UTC 16-24 | removed  9 trades +1.351R | remaining 14 trades +4.827R avg +0.345R | net-win 42.9% | PF 1.74
 
 BTC 15M sequence/tail-dependence diagnostic (DESCRIPTIVE; frozen rules unchanged):
 Chronological NetR path of the exact frozen trades; measures concentration and drawdown, not a new filter.
