@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-07T06:31:11Z
-# git_commit_before_report: faa6402ea7c23c3d1160a073c4dab22dae580f52
+# generated_utc: 2026-09-07T07:33:18Z
+# git_commit_before_report: 447358787aa4fff26ef2fb48940b25876d2f37ed
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -327,6 +327,13 @@ omit 2018 | removed  3 trades -0.350R | remaining  6 trades +6.185R avg +1.031R 
 omit 2021 | removed  1 trades +2.840R | remaining  8 trades +2.995R avg +0.374R | net-win 50.0% | PF 2.15
 omit 2022 | removed  1 trades +2.863R | remaining  8 trades +2.972R avg +0.371R | net-win 50.0% | PF 2.15
 omit 2026 | removed  1 trades -0.272R | remaining  8 trades +6.107R avg +0.763R | net-win 62.5% | PF 3.63
+
+BTC 15M UTC 10-18 transaction-cost stress (DESCRIPTIVE; frozen rules unchanged):
+Exact same 10-18 UTC frozen trades re-priced at fixed multiples of baseline friction. Baseline cost is inferred trade-by-trade as grossR-netR; no signals, fills, stops, targets or holding rules change.
+cost x1.0 | n= 9 | NetR +9.489R avg +1.054R | net-win 88.9% | PF 280.09 | total friction 0.866R
+cost x1.5 | n= 9 | NetR +9.056R avg +1.006R | net-win 88.9% | PF 216.62 | total friction 1.299R
+cost x2.0 | n= 9 | NetR +8.623R avg +0.958R | net-win 88.9% | PF 173.46 | total friction 1.732R
+cost x3.0 | n= 9 | NetR +7.757R avg +0.862R | net-win 88.9% | PF 118.53 | total friction 2.598R
 
 BTC 15M UTC 10-18 leave-one-year-out concentration stress (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC entry block only, removes each represented calendar year in turn and recomputes remaining NetR. This tests whether the later boundary-perturbation result depends on one year; it does not create a year/session filter.
