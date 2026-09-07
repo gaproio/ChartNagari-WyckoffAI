@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-05T19:58:20Z
-# git_commit_before_report: 356fee448a765ba95dcc9f0e6a838f9fc3e1f7f9
+# generated_utc: 2026-09-07T04:25:00Z
+# git_commit_before_report: f08a8950388e60e3bab71b047c09a6ea51398c66
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -262,6 +262,12 @@ cost x1.0 | n= 9 | NetR +5.835R avg +0.648R | net-win 55.6% | PF 3.25 | total fr
 cost x1.5 | n= 9 | NetR +5.329R avg +0.592R | net-win 55.6% | PF 2.91 | total friction 1.518R
 cost x2.0 | n= 9 | NetR +4.823R avg +0.536R | net-win 55.6% | PF 2.61 | total friction 2.024R
 cost x3.0 | n= 9 | NetR +3.811R avg +0.423R | net-win 55.6% | PF 2.13 | total friction 3.036R
+
+BTC 15M UTC 08-16 leave-one-calendar-quarter-out stress (DESCRIPTIVE; frozen rules unchanged):
+Within the 08-16 UTC entry block only, removes each fixed calendar-quarter cohort once and recomputes remaining NetR/PF. This tests seasonal concentration; it does not create a quarter/session filter.
+omit Q1 | removed  3 trades +3.728R | remaining  6 trades +2.107R avg +0.351R | net-win 50.0% | PF 2.39
+omit Q2 | removed  2 trades +2.568R | remaining  7 trades +3.267R avg +0.467R | net-win 57.1% | PF 2.41
+omit Q4 | removed  4 trades -0.461R | remaining  5 trades +6.296R avg +1.259R | net-win 60.0% | PF 5.68
 
 BTC 15M UTC 08-16 leave-one-regime-out stress (DESCRIPTIVE; frozen rules unchanged):
 Within the 08-16 UTC entry block only, removes each represented causal 30D regime cohort once and recomputes remaining NetR/PF. This tests regime concentration inside the session; it does not create a regime/session filter.
