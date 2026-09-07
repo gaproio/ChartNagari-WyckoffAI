@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-07T04:47:02Z
-# git_commit_before_report: aaae137790042ef72a746cd5c51f0441a90743d6
+# generated_utc: 2026-09-07T05:29:09Z
+# git_commit_before_report: 2cd58e9a9ddd01381b7a35b80c6fc6ad4b2a9995
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -255,6 +255,15 @@ Uses equal-weight calendar-year B incidence for 2017-2022 and an exact permutati
 Observed Spearman rho(year, B incidence): -0.600
 Exact two-sided rank permutations: abs(rho) >= observed in 174/720 (24.2%)
 Interpretation: this complements the contiguous-window check by asking whether the six annual rates form a broadly monotonic chronological trend rather than relying on a single era boundary. Small year count means descriptive robustness only.
+
+BTC 15M 08-16 vs 10-18 boundary replacement attribution (DESCRIPTIVE; frozen rules unchanged):
+Decomposes the two fixed 8-hour windows into the 08-10 band removed by the shift, their common 10-16 core, and the 16-18 band added by the shift. This explains the boundary perturbation without selecting or optimizing a session filter.
+08-10 BASE-ONLY    n= 4 | net-win 25.0% | total +0.279R avg +0.070R | PF 1.11
+10-16 COMMON       n= 5 | net-win 80.0% | total +5.556R avg +1.111R | PF 164.41
+16-18 SHIFT-ONLY   n= 4 | net-win 100.0% | total +3.933R avg +0.983R | PF inf
+08-16 REBUILT      n= 9 | net-win 55.6% | total +5.835R avg +0.648R | PF 3.25
+10-18 REBUILT      n= 9 | net-win 88.9% | total +9.489R avg +1.054R | PF 280.09
+replacement delta: drop 08-10 -0.279R, add 16-18 +3.933R => 10-18 minus 08-16 +3.654R
 
 BTC 15M UTC 08-16 transaction-cost stress (DESCRIPTIVE; frozen rules unchanged):
 Exact same 08-16 UTC frozen trades re-priced at fixed multiples of baseline friction. Baseline cost is inferred trade-by-trade as grossR-netR; no signals, fills, stops, targets or holding rules change.
