@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-07T04:25:00Z
-# git_commit_before_report: f08a8950388e60e3bab71b047c09a6ea51398c66
+# generated_utc: 2026-09-07T04:47:02Z
+# git_commit_before_report: aaae137790042ef72a746cd5c51f0441a90743d6
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -349,6 +349,14 @@ Fixed 8-hour UTC blocks: 00-08, 08-16, and 16-24. Entry timestamps only; this is
 UTC 00-08  n= 5 | net-win 20.0% | total -1.008R avg -0.202R | -16.3% of total net
 UTC 08-16  n= 9 | net-win 55.6% | total +5.835R avg +0.648R | 94.4% of total net
 UTC 16-24  n= 9 | net-win 55.6% | total +1.351R avg +0.150R | 21.9% of total net
+
+BTC 15M UTC 08-16 boundary-shift perturbation (DESCRIPTIVE; frozen rules unchanged):
+Re-buckets the exact frozen trades into five fixed 8-hour UTC windows centered on the original 08-16 block: 06-14, 07-15, 08-16, 09-17 and 10-18. This tests sensitivity to arbitrary session cutoffs; it does not create a session filter.
+UTC 06-14  n= 7 | net-win 28.6% | total +0.918R avg +0.131R | PF 1.24
+UTC 07-15  n= 8 | net-win 50.0% | total +5.509R avg +0.689R | PF 3.12
+UTC 08-16  n= 9 | net-win 55.6% | total +5.835R avg +0.648R | PF 3.25
+UTC 09-17  n= 9 | net-win 77.8% | total +10.205R avg +1.134R | PF 34.35
+UTC 10-18  n= 9 | net-win 88.9% | total +9.489R avg +1.054R | PF 280.09
 
 BTC 15M UTC weekday concentration (DESCRIPTIVE; frozen rules unchanged):
 Entry timestamps grouped Monday-Sunday in UTC. This is a calendar concentration diagnostic, not a weekday filter.
