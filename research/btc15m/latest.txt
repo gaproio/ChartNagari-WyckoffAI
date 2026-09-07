@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-07T10:59:55Z
-# git_commit_before_report: 49282f1aa9a6a2cf7d903c6e8e156806a88df30f
+# generated_utc: 2026-09-07T19:06:47Z
+# git_commit_before_report: 0e98768b9441597c9ac27127a652af70d7433f8b
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -355,6 +355,13 @@ Exact frozen trades in the fixed 10-18 UTC entry block grouped into four predecl
 14-16 UTC | n= 3 | net +3.651R avg +1.217R | net-win 100.0% | PF +Inf
 16-18 UTC | n= 4 | net +3.933R avg +0.983R | net-win 100.0% | PF +Inf
 largest absolute 2h NetR contribution: 16-18 UTC at 3.933R absolute
+
+BTC 15M UTC 10-18 leave-one-2H-block-out stress (DESCRIPTIVE; frozen rules unchanged):
+Within the fixed 10-18 UTC entry block only, removes each predeclared 2-hour UTC entry cohort once and recomputes remaining NetR/PF. This tests intraday concentration; it does not create or optimize a sub-session filter.
+omit 10-12 UTC | removed  1 trades +1.939R | remaining  8 trades +7.550R avg +0.944R | net-win 87.5% | PF 223.06
+omit 12-14 UTC | removed  1 trades -0.034R | remaining  8 trades +9.523R avg +1.190R | net-win 100.0% | PF +Inf
+omit 14-16 UTC | removed  3 trades +3.651R | remaining  6 trades +5.838R avg +0.973R | net-win 83.3% | PF 172.71
+omit 16-18 UTC | removed  4 trades +3.933R | remaining  5 trades +5.556R avg +1.111R | net-win 80.0% | PF 164.41
 
 BTC 15M UTC 10-18 leave-one-weekday-out concentration stress (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC entry block only, removes each represented UTC weekday cohort once and recomputes remaining NetR/PF. This tests weekday concentration; it does not create a weekday/session filter.
