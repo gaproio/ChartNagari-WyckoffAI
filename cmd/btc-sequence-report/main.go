@@ -203,6 +203,55 @@ func main() {
 	}
 
 	fmt.Println()
+	fmt.Println("BTC 15M UTC 08-16 boundary-shift perturbation (DESCRIPTIVE; frozen rules unchanged):")
+	fmt.Println("Re-buckets the exact frozen trades into five fixed 8-hour UTC windows centered on the original 08-16 block: 06-14, 07-15, 08-16, 09-17 and 10-18. This tests sensitivity to arbitrary session cutoffs; it does not create a session filter.")
+	boundaryWindows := []struct {
+		name  string
+		start int
+	}{
+		{name: "UTC 06-14", start: 6},
+		{name: "UTC 07-15", start: 7},
+		{name: "UTC 08-16", start: 8},
+		{name: "UTC 09-17", start: 9},
+		{name: "UTC 10-18", start: 10},
+	}
+	for _, w := range boundaryWindows {
+		trades := 0
+		wins := 0
+		total := 0.0
+		positive := 0.0
+		negative := 0.0
+		for _, t := range report.Trades {
+			hour := time.Unix(t.EntryTime, 0).UTC().Hour()
+			if hour < w.start || hour >= w.start+8 {
+				continue
+			}
+			trades++
+			total += t.NetR
+			if t.NetR > 0 {
+				wins++
+				positive += t.NetR
+			} else if t.NetR < 0 {
+				negative += t.NetR
+			}
+		}
+		avg := 0.0
+		winRate := 0.0
+		if trades > 0 {
+			avg = total / float64(trades)
+			winRate = float64(wins) / float64(trades) * 100
+		}
+		pf := "n/a"
+		if negative < 0 {
+			pf = fmt.Sprintf("%.2f", positive/-negative)
+		} else if positive > 0 {
+			pf = "inf"
+		}
+		fmt.Printf("%-10s n=%2d | net-win %.1f%% | total %+.3fR avg %+.3fR | PF %s\n",
+			w.name, trades, winRate, total, avg, pf)
+	}
+
+	fmt.Println()
 	fmt.Println("BTC 15M UTC weekday concentration (DESCRIPTIVE; frozen rules unchanged):")
 	fmt.Println("Entry timestamps grouped Monday-Sunday in UTC. This is a calendar concentration diagnostic, not a weekday filter.")
 	weekdayTrades := [7]int{}
