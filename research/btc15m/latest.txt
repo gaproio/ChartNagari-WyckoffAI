@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-07T09:57:37Z
-# git_commit_before_report: 756e0ff07bbf75cc6ca94a555cf999cfc279311c
+# generated_utc: 2026-09-07T10:59:55Z
+# git_commit_before_report: 49282f1aa9a6a2cf7d903c6e8e156806a88df30f
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -347,6 +347,14 @@ omit 2021-01-11 17:45 (+1.043R) | remaining  8 trades +8.446R avg +1.056R | net-
 omit 2021-06-22 16:15 (+1.512R) | remaining  8 trades +7.977R avg +0.997R | net-win 87.5% | PF 235.62
 omit 2022-01-24 14:45 (+2.863R) | remaining  8 trades +6.626R avg +0.828R | net-win 87.5% | PF 195.88
 jackknife remaining-NetR range: +6.626R to +9.523R across 9 omissions
+
+BTC 15M UTC 10-18 two-hour concentration diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Exact frozen trades in the fixed 10-18 UTC entry block grouped into four predeclared 2-hour UTC sub-blocks. This measures concentration only; it does not create or optimize a session filter.
+10-12 UTC | n= 1 | net +1.939R avg +1.939R | net-win 100.0% | PF +Inf
+12-14 UTC | n= 1 | net -0.034R avg -0.034R | net-win 0.0% | PF 0.00
+14-16 UTC | n= 3 | net +3.651R avg +1.217R | net-win 100.0% | PF +Inf
+16-18 UTC | n= 4 | net +3.933R avg +0.983R | net-win 100.0% | PF +Inf
+largest absolute 2h NetR contribution: 16-18 UTC at 3.933R absolute
 
 BTC 15M UTC 10-18 leave-one-weekday-out concentration stress (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC entry block only, removes each represented UTC weekday cohort once and recomputes remaining NetR/PF. This tests weekday concentration; it does not create a weekday/session filter.
