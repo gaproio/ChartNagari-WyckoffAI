@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-07T05:29:09Z
-# git_commit_before_report: 2cd58e9a9ddd01381b7a35b80c6fc6ad4b2a9995
+# generated_utc: 2026-09-07T06:31:11Z
+# git_commit_before_report: faa6402ea7c23c3d1160a073c4dab22dae580f52
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -327,6 +327,13 @@ omit 2018 | removed  3 trades -0.350R | remaining  6 trades +6.185R avg +1.031R 
 omit 2021 | removed  1 trades +2.840R | remaining  8 trades +2.995R avg +0.374R | net-win 50.0% | PF 2.15
 omit 2022 | removed  1 trades +2.863R | remaining  8 trades +2.972R avg +0.371R | net-win 50.0% | PF 2.15
 omit 2026 | removed  1 trades -0.272R | remaining  8 trades +6.107R avg +0.763R | net-win 62.5% | PF 3.63
+
+BTC 15M UTC 10-18 leave-one-year-out concentration stress (DESCRIPTIVE; frozen rules unchanged):
+Within the fixed 10-18 UTC entry block only, removes each represented calendar year in turn and recomputes remaining NetR. This tests whether the later boundary-perturbation result depends on one year; it does not create a year/session filter.
+omit 2017 | removed  3 trades +0.754R | remaining  6 trades +8.735R avg +1.456R | net-win 100.0% | PF +Inf
+omit 2018 | removed  3 trades +3.317R | remaining  6 trades +6.172R avg +1.029R | net-win 83.3% | PF 182.53
+omit 2021 | removed  2 trades +2.555R | remaining  7 trades +6.934R avg +0.991R | net-win 85.7% | PF 204.94
+omit 2022 | removed  1 trades +2.863R | remaining  8 trades +6.626R avg +0.828R | net-win 87.5% | PF 195.88
 
 BTC 15M UTC session leave-one-block-out stress (DESCRIPTIVE; frozen rules unchanged):
 Removes each fixed 8-hour UTC entry block in turn and recomputes the remaining frozen-trade NetR path. This tests session concentration only; it does not create a session filter.
