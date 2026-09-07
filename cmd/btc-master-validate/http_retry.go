@@ -35,7 +35,10 @@ func (b *cancelOnCloseBody) Close() error {
 
 func (t *boundedRetryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	const attempts = 3
-	const attemptTimeout = 15 * time.Second
+	// fetch15M uses a 20s http.Client deadline. Keep each attempt short enough
+	// that all three attempts plus bounded backoff can actually occur before
+	// that parent deadline expires.
+	const attemptTimeout = 6 * time.Second
 
 	var lastErr error
 	for i := 0; i < attempts; i++ {
