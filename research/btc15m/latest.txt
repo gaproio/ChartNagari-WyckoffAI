@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-07T19:06:47Z
-# git_commit_before_report: 0e98768b9441597c9ac27127a652af70d7433f8b
+# generated_utc: 2026-09-08T04:27:49Z
+# git_commit_before_report: b43b3fdaaad3a7062d6a265a798c3543eefa2f0a
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -334,6 +334,12 @@ cost x1.0 | n= 9 | NetR +9.489R avg +1.054R | net-win 88.9% | PF 280.09 | total 
 cost x1.5 | n= 9 | NetR +9.056R avg +1.006R | net-win 88.9% | PF 216.62 | total friction 1.299R
 cost x2.0 | n= 9 | NetR +8.623R avg +0.958R | net-win 88.9% | PF 173.46 | total friction 1.732R
 cost x3.0 | n= 9 | NetR +7.757R avg +0.862R | net-win 88.9% | PF 118.53 | total friction 2.598R
+
+BTC 15M UTC 10-18 leave-one-calendar-quarter-out stress (DESCRIPTIVE; frozen rules unchanged):
+Within the fixed 10-18 UTC entry block only, removes each represented UTC calendar quarter once and recomputes remaining NetR/PF. This tests seasonal concentration; it does not create or optimize a calendar filter.
+omit Q1 | removed  4 trades +6.414R | remaining  5 trades +3.075R avg +0.615R | net-win 80.0% | PF 91.44
+omit Q2 | removed  2 trades +2.321R | remaining  7 trades +7.168R avg +1.024R | net-win 85.7% | PF 211.82
+omit Q4 | removed  3 trades +0.754R | remaining  6 trades +8.735R avg +1.456R | net-win 100.0% | PF +Inf
 
 BTC 15M UTC 10-18 single-trade jackknife (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC entry block only, removes each frozen trade once and recomputes remaining NetR/PF. This tests single-observation dependence; it does not create a trade/session filter.
