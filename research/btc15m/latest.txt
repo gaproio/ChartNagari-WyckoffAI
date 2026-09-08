@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-08T04:49:52Z
-# git_commit_before_report: cd5a6a222f05645561b45a03a1d9324bc63924d8
+# generated_utc: 2026-09-08T07:36:36Z
+# git_commit_before_report: 1cfcdd240aa6ace17b8be0a8372de26b7e718307
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -345,6 +345,13 @@ Within the fixed 10-18 UTC entry block only, removes each represented UTC calend
 omit Q1 | removed  4 trades +6.414R | remaining  5 trades +3.075R avg +0.615R | net-win 80.0% | PF 91.44
 omit Q2 | removed  2 trades +2.321R | remaining  7 trades +7.168R avg +1.024R | net-win 85.7% | PF 211.82
 omit Q4 | removed  3 trades +0.754R | remaining  6 trades +8.735R avg +1.456R | net-win 100.0% | PF +Inf
+
+BTC 15M UTC 10-18 recency-coverage diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Exact fixed 10-18 UTC trades measured against the report end date using predeclared trailing 1Y/2Y/4Y windows. This tests historical recency only; it does not create or optimize a date filter.
+cohort n=9 | first 2017-10-22 | latest 2022-01-24 | report end 2026-08-31 | latest-observation age 1679 days (4.60 years)
+trailing 1Y since 2025-08-31 | 0/9 cohort trades
+trailing 2Y since 2024-08-31 | 0/9 cohort trades
+trailing 4Y since 2022-08-31 | 0/9 cohort trades
 
 BTC 15M UTC 10-18 single-trade jackknife (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC entry block only, removes each frozen trade once and recomputes remaining NetR/PF. This tests single-observation dependence; it does not create a trade/session filter.
