@@ -99,4 +99,44 @@ func init() {
 		fmt.Printf("%-18s | n=%d | first %s | latest %s | age %.0f days | trailing 1Y/2Y/4Y %d/%d/%d\n",
 			c.name, len(c.trades), c.trades[0].Format("2006-01-02"), latest.Format("2006-01-02"), ageDays, counts[0], counts[1], counts[2])
 	}
+
+	// Fixed-era incidence is a bounded follow-up to the recency partition above.
+	// It asks whether the 10-18 disappearance is abrupt/recent or part of a longer
+	// temporal shift. Era boundaries are predeclared and already used elsewhere in
+	// the master report; no session boundary, date cutoff, or trading rule is tuned.
+	type era struct {
+		name       string
+		startYear  int
+		endYear    int
+	}
+	eras := []era{
+		{name: "2017-2019", startYear: 2017, endYear: 2019},
+		{name: "2020-2022", startYear: 2020, endYear: 2022},
+		{name: "2023-2025", startYear: 2023, endYear: 2025},
+		{name: "2026 PARTIAL", startYear: 2026, endYear: 2026},
+	}
+
+	fmt.Println()
+	fmt.Println("BTC 15M UTC 10-18 frozen-trade incidence by fixed era (DESCRIPTIVE; frozen rules unchanged):")
+	fmt.Println("Exact frozen trades only, using the master report's predeclared eras. Counts and 10-18 share diagnose temporal/session concentration; they do not create a session or era filter.")
+	for _, e := range eras {
+		insideN, outsideN := 0, 0
+		for _, ts := range inside.trades {
+			if ts.Year() >= e.startYear && ts.Year() <= e.endYear {
+				insideN++
+			}
+		}
+		for _, ts := range outside.trades {
+			if ts.Year() >= e.startYear && ts.Year() <= e.endYear {
+				outsideN++
+			}
+		}
+		total := insideN + outsideN
+		if total == 0 {
+			fmt.Printf("%-12s | all n=0\n", e.name)
+			continue
+		}
+		fmt.Printf("%-12s | 10-18 n=%d | outside n=%d | all n=%d | 10-18 share %.1f%%\n",
+			e.name, insideN, outsideN, total, 100*float64(insideN)/float64(total))
+	}
 }
