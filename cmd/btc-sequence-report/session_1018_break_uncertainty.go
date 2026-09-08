@@ -10,8 +10,9 @@ import (
 	"time"
 )
 
-// wilson95 returns a 95% Wilson score interval for a binomial proportion.
-func wilson95(successes, total int) (float64, float64) {
+// wilson95SessionBreak returns a 95% Wilson score interval for a binomial proportion.
+// The distinct name avoids colliding with the existing package-level wilson95 helper.
+func wilson95SessionBreak(successes, total int) (float64, float64) {
 	if total <= 0 {
 		return 0, 0
 	}
@@ -81,8 +82,8 @@ func init() {
 		return
 	}
 
-	preLo, preHi := wilson95(preInside, preTotal)
-	postLo, postHi := wilson95(postInside, postTotal)
+	preLo, preHi := wilson95SessionBreak(preInside, preTotal)
+	postLo, postHi := wilson95SessionBreak(postInside, postTotal)
 	preShare := float64(preInside) / float64(preTotal)
 	postShare := float64(postInside) / float64(postTotal)
 	zeroRecentProb := math.Pow(1-preShare, float64(postTotal))
