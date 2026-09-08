@@ -94,6 +94,7 @@ func init() {
 				if !ts.Before(cutoff) && !ts.After(reportEnd) {
 					counts[i]++
 				}
+			}
 		}
 		fmt.Printf("%-18s | n=%d | first %s | latest %s | age %.0f days | trailing 1Y/2Y/4Y %d/%d/%d\n",
 			c.name, len(c.trades), c.trades[0].Format("2006-01-02"), latest.Format("2006-01-02"), ageDays, counts[0], counts[1], counts[2])
