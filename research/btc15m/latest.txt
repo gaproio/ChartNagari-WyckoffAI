@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-08T07:36:36Z
-# git_commit_before_report: 1cfcdd240aa6ace17b8be0a8372de26b7e718307
+# generated_utc: 2026-09-08T09:59:09Z
+# git_commit_before_report: ae308afe10a4b23ee86c9b100b31df3570563fe0
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -352,6 +352,11 @@ cohort n=9 | first 2017-10-22 | latest 2022-01-24 | report end 2026-08-31 | late
 trailing 1Y since 2025-08-31 | 0/9 cohort trades
 trailing 2Y since 2024-08-31 | 0/9 cohort trades
 trailing 4Y since 2022-08-31 | 0/9 cohort trades
+
+BTC 15M UTC 10-18 recency partition diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Exact frozen trades partitioned once into the already-studied 10-18 UTC block versus all other UTC entry times. This tests whether the 10-18 observation drought is session-specific or system-wide; it does not create or optimize a session/date filter.
+10-18 UTC          | n=9 | first 2017-10-22 | latest 2022-01-24 | age 1679 days | trailing 1Y/2Y/4Y 0/0/0
+outside 10-18 UTC  | n=14 | first 2017-09-03 | latest 2026-06-27 | age 65 days | trailing 1Y/2Y/4Y 2/2/3
 
 BTC 15M UTC 10-18 single-trade jackknife (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC entry block only, removes each frozen trade once and recomputes remaining NetR/PF. This tests single-observation dependence; it does not create a trade/session filter.
