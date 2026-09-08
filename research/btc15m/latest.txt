@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-08T04:27:49Z
-# git_commit_before_report: b43b3fdaaad3a7062d6a265a798c3543eefa2f0a
+# generated_utc: 2026-09-08T04:49:52Z
+# git_commit_before_report: cd5a6a222f05645561b45a03a1d9324bc63924d8
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -327,6 +327,11 @@ omit 2018 | removed  3 trades -0.350R | remaining  6 trades +6.185R avg +1.031R 
 omit 2021 | removed  1 trades +2.840R | remaining  8 trades +2.995R avg +0.374R | net-win 50.0% | PF 2.15
 omit 2022 | removed  1 trades +2.863R | remaining  8 trades +2.972R avg +0.371R | net-win 50.0% | PF 2.15
 omit 2026 | removed  1 trades -0.272R | remaining  8 trades +6.107R avg +0.763R | net-win 62.5% | PF 3.63
+
+BTC 15M UTC 10-18 chronological-half stability diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Exact fixed 10-18 UTC trades sorted by entry time and split once at the median observation. This is a bounded temporal-stability check, not a date/session filter or parameter search.
+EARLY HALF | 2017-10-22 -> 2018-01-14 | n= 4 | NetR +1.323R avg +0.331R | net-win 75.0% | PF 39.91
+LATE HALF  | 2018-03-09 -> 2022-01-24 | n= 5 | NetR +8.166R avg +1.633R | net-win 100.0% | PF +Inf
 
 BTC 15M UTC 10-18 transaction-cost stress (DESCRIPTIVE; frozen rules unchanged):
 Exact same 10-18 UTC frozen trades re-priced at fixed multiples of baseline friction. Baseline cost is inferred trade-by-trade as grossR-netR; no signals, fills, stops, targets or holding rules change.
