@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-10T10:34:01Z
-# git_commit_before_report: 9149479bbe74fd74badd519c4e63ce224b7977f2
+# generated_utc: 2026-09-10T19:04:50Z
+# git_commit_before_report: 0a4117ecfdd49e86fb8c656794d51444a37f5436
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -327,6 +327,12 @@ omit 2018 | removed  3 trades -0.350R | remaining  6 trades +6.185R avg +1.031R 
 omit 2021 | removed  1 trades +2.840R | remaining  8 trades +2.995R avg +0.374R | net-win 50.0% | PF 2.15
 omit 2022 | removed  1 trades +2.863R | remaining  8 trades +2.972R avg +0.371R | net-win 50.0% | PF 2.15
 omit 2026 | removed  1 trades -0.272R | remaining  8 trades +6.107R avg +0.763R | net-win 62.5% | PF 3.63
+
+BTC 15M UTC 10-18 session-boundary perturbation (DESCRIPTIVE; frozen rules unchanged):
+Compares only the predeclared one-hour shifts 09-17 and 11-19 with the existing 10-18 UTC cohort. This is a bounded boundary-sensitivity check, not a session search or filter.
+09-17 UTC (-1h)    | n= 9 | net +10.205R avg +1.134R | net-win 77.8% | PF 34.35
+10-18 UTC anchor   | n= 9 | net +9.489R avg +1.054R | net-win 88.9% | PF 280.09
+11-19 UTC (+1h)    | n= 8 | net +7.550R avg +0.944R | net-win 87.5% | PF 223.06
 
 BTC 15M UTC 10-18 fixed-boundary Bayes-factor diagnostic (DESCRIPTIVE; frozen rules unchanged):
 Same exact frozen trades and predeclared 2023 boundary. A Beta-binomial comparison uses symmetric Beta(1,1) reference priors to compare separate pre/post session-incidence rates against one stable rate. This is prior-sensitive evidence only; no session/date filter is created.
