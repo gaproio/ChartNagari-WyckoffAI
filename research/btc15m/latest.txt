@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-10T05:44:00Z
-# git_commit_before_report: 0bf8204bc40cebcb3c867a1dce5a344f848915b8
+# generated_utc: 2026-09-10T10:34:01Z
+# git_commit_before_report: 9149479bbe74fd74badd519c4e63ce224b7977f2
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -335,6 +335,10 @@ through 2022: 10-18 9 | outside 11 ; 2023+: 10-18 0 | outside 3 | BF(break/stabl
 BTC 15M UTC 10-18 fixed-boundary Fisher exact diagnostic (DESCRIPTIVE; frozen rules unchanged):
 Same exact frozen trades and predeclared 2023 boundary as the incidence-break uncertainty check. Two-sided Fisher exact tests whether session incidence differs across the boundary without relying on asymptotic approximations; no session/date filter is created.
 through 2022: 10-18 9 | outside 11 ; 2023+: 10-18 0 | outside 3 | Fisher two-sided p=0.2530
+
+BTC 15M UTC 10-18 historical-posterior predictive drought diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Uses only through-2022 frozen trades to form a Beta(1,1)-updated historical session-incidence posterior, then integrates that uncertainty when predicting the observed 2023+ sample size. No session/date filter is created.
+through 2022: 10-18 9 | outside 11 | posterior Beta(10,12) ; 2023+: 10-18 0/3 | posterior-predictive P(0 of 3)=18.0%
 
 BTC 15M UTC 10-18 incidence-break uncertainty (DESCRIPTIVE; frozen rules unchanged):
 Exact frozen trades split once at the predeclared 2023 era boundary. Wilson 95% intervals and the historical-share zero-count probability quantify uncertainty around the apparent post-2022 session drought; no session/date filter is created.
