@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-09T13:51:49Z
-# git_commit_before_report: a9802352b8f638552a2ef4156a1f33c9d1701261
+# generated_utc: 2026-09-10T04:21:22Z
+# git_commit_before_report: fb1395fe1a8b24628db353bd5770654f83792253
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -327,6 +327,10 @@ omit 2018 | removed  3 trades -0.350R | remaining  6 trades +6.185R avg +1.031R 
 omit 2021 | removed  1 trades +2.840R | remaining  8 trades +2.995R avg +0.374R | net-win 50.0% | PF 2.15
 omit 2022 | removed  1 trades +2.863R | remaining  8 trades +2.972R avg +0.371R | net-win 50.0% | PF 2.15
 omit 2026 | removed  1 trades -0.272R | remaining  8 trades +6.107R avg +0.763R | net-win 62.5% | PF 3.63
+
+BTC 15M UTC 10-18 fixed-boundary Fisher exact diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Same exact frozen trades and predeclared 2023 boundary as the incidence-break uncertainty check. Two-sided Fisher exact tests whether session incidence differs across the boundary without relying on asymptotic approximations; no session/date filter is created.
+through 2022: 10-18 9 | outside 11 ; 2023+: 10-18 0 | outside 3 | Fisher two-sided p=0.2530
 
 BTC 15M UTC 10-18 incidence-break uncertainty (DESCRIPTIVE; frozen rules unchanged):
 Exact frozen trades split once at the predeclared 2023 era boundary. Wilson 95% intervals and the historical-share zero-count probability quantify uncertainty around the apparent post-2022 session drought; no session/date filter is created.
