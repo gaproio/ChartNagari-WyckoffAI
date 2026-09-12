@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-12T08:50:13Z
-# git_commit_before_report: 995051e926270a24d134371d2305c9a5800e55d5
+# generated_utc: 2026-09-12T12:26:53Z
+# git_commit_before_report: 4bbc8cf27a0f20aa29adc5e2d06c40736e391441
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -419,6 +419,18 @@ observed equal-weight regime+era contrast: +1.138R
 fixed-margin assignments enumerated: 1200 (expected 1200)
 exact one-sided P(random contrast >= observed) = 0.0008
 exact two-sided P(|random contrast| >= |observed|) = 0.0008
+
+BTC 15M UTC 10-18 regime+era matched exact rank diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Within each common-support regime+era stratum, replaces NetR magnitudes with within-stratum midranks, then exactly randomizes the fixed number of 10-18 labels. This bounded ordinal stress reduces sensitivity to extreme winners/losers; it is not a session/regime/era filter.
+  BEAR_30D|2017-2019       n= 5 | 10-18 n= 2 | observed rank diff +2.500
+  BEAR_30D|2020-2022       n= 2 | 10-18 n= 1 | observed rank diff +1.000
+  BULL_30D|2017-2019       n= 6 | 10-18 n= 4 | observed rank diff +3.000
+  BULL_30D|2020-2022       n= 2 | 10-18 n= 1 | observed rank diff +1.000
+  SIDEWAYS_30D|2020-2022   n= 2 | 10-18 n= 1 | observed rank diff +1.000
+observed equal-weight regime+era rank contrast: +1.700 across 5 common-support strata
+fixed-margin assignments enumerated: 1200 (expected 1200)
+exact one-sided P(random rank contrast >= observed) = 0.0008
+exact two-sided P(|random rank contrast| >= |observed|) = 0.0017
 
 BTC 15M UTC 10-18 leave-one-regime-out stress (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC entry cohort only, removes each represented causal 30D regime cohort once and recomputes remaining NetR/PF. This tests regime concentration inside the session; it does not create a regime/session filter.
