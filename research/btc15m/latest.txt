@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-12T04:41:36Z
-# git_commit_before_report: f58d089ca9278d7bfeb50b014ac06a9b6a003336
+# generated_utc: 2026-09-12T05:59:09Z
+# git_commit_before_report: 7ed956e15de1dc151be68bf2b547c0eed84895e6
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -412,6 +412,13 @@ BEAR_30D     | 10-18 n= 3 avg +1.414R | outside n= 6 avg +0.348R | within-regime
 SIDEWAYS_30D | 10-18 n= 1 avg +1.512R | outside n= 4 avg -0.436R | within-regime diff +1.948R
 BULL_30D     | 10-18 n= 5 avg +0.747R | outside n= 3 avg -0.852R | within-regime diff +1.599R
 equal-weight common-support contrast across 3 regimes: +1.538R (10-18 minus outside)
+
+BTC 15M UTC 10-18 regime-matched exact randomization (DESCRIPTIVE; frozen rules unchanged):
+Within each common-support 30D regime, holds the observed 10-18 trade count fixed and exactly enumerates all session-label assignments. Statistic is the prior equal-weight within-regime mean-NetR contrast. This tests an exchangeability null only; it does not create a session/regime filter.
+observed equal-weight contrast: +1.538R across 3 common-support regimes
+fixed-margin assignments enumerated: 23520 (expected 23520)
+exact one-sided P(random contrast >= observed) = 0.0108
+exact two-sided P(|random contrast| >= |observed|) = 0.0160
 
 BTC 15M UTC 10-18 leave-one-risk-band-out stress (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC cohort, removes each already-predeclared broad structural-risk band once and recomputes the remainder. This tests risk-mix concentration only; it does not create a risk/session filter.
