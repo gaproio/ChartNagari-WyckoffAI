@@ -154,6 +154,56 @@ func init() {
 	fmt.Printf("fixed-margin assignments enumerated: %d (expected %d)\n", visited, totalAssignments)
 	fmt.Printf("exact one-sided P(random sign contrast >= observed) = %.4f\n", float64(geOne)/float64(visited))
 	fmt.Printf("exact two-sided P(|random sign contrast| >= |observed|) = %.4f\n", float64(geTwo)/float64(visited))
+
+	if len(strata) > 1 {
+		fmt.Println()
+		fmt.Println("BTC 15M UTC 10-18 regime+era exact sign leave-one-stratum-out stress (DESCRIPTIVE; frozen rules unchanged):")
+		fmt.Println("Repeats the fixed-margin positive/non-positive randomization after omitting each common-support regime+era stratum once. This bounded binary-outcome concentration stress ignores payoff magnitude and changes no filter or trading rule.")
+		for omit := range strata {
+			kept := len(strata) - 1
+			obsSum := observedSum - strata[omit].obs
+			obsLOO := obsSum / float64(kept)
+			expected := int64(1)
+			capOK := true
+			for i, diffs := range perStratum {
+				if i == omit {
+					continue
+				}
+				if len(diffs) == 0 || expected > maxAssignments/int64(len(diffs)) {
+					capOK = false
+					break
+				}
+				expected *= int64(len(diffs))
+			}
+			if !capOK {
+				fmt.Printf("omit %-24s | exact sign enumeration unavailable within %d-assignment cap\n", strata[omit].name, maxAssignments)
+				continue
+			}
+
+			var looVisited, looTwo int64
+			var combineLOO func(int, float64)
+			combineLOO = func(idx int, sum float64) {
+				if idx == len(perStratum) {
+					stat := sum / float64(kept)
+					looVisited++
+					if math.Abs(stat) >= math.Abs(obsLOO)-eps {
+						looTwo++
+					}
+					return
+				}
+				if idx == omit {
+					combineLOO(idx+1, sum)
+					return
+				}
+				for _, diff := range perStratum[idx] {
+					combineLOO(idx+1, sum+diff)
+				}
+			}
+			combineLOO(0, 0)
+			fmt.Printf("omit %-24s | strata %d | observed sign %+.3f | assignments %d | exact two-sided p=%.4f\n",
+				strata[omit].name, kept, obsLOO, looVisited, float64(looTwo)/float64(looVisited))
+		}
+	}
 }
 
 func signFixedEra1018(year int) string {
