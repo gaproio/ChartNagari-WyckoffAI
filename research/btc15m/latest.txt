@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-12T03:58:50Z
-# git_commit_before_report: 28269a3366bad1b25a6879dbfe6b7776f99dded9
+# generated_utc: 2026-09-12T04:41:36Z
+# git_commit_before_report: f58d089ca9278d7bfeb50b014ac06a9b6a003336
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -405,6 +405,13 @@ omit BEAR_30D     | removed  3 trades +4.241R | remaining  6 trades +5.248R avg 
 omit SIDEWAYS_30D | removed  1 trades +1.512R | remaining  8 trades +7.977R avg +0.997R | net-win 87.5% | PF 235.62
 omit BULL_30D     | removed  5 trades +3.736R | remaining  4 trades +5.753R avg +1.438R | net-win 100.0% | PF +Inf
 regime-jackknife remaining-NetR range: +5.248R to +7.977R across 3 represented regimes
+
+BTC 15M UTC 10-18 regime-matched contrast (DESCRIPTIVE; frozen rules unchanged):
+Compares mean NetR inside versus outside the fixed 10-18 UTC window within each existing causal 30D regime. The final contrast equal-weights only regimes with trades on both sides, reducing regime-mix confounding without creating a session or regime filter.
+BEAR_30D     | 10-18 n= 3 avg +1.414R | outside n= 6 avg +0.348R | within-regime diff +1.066R
+SIDEWAYS_30D | 10-18 n= 1 avg +1.512R | outside n= 4 avg -0.436R | within-regime diff +1.948R
+BULL_30D     | 10-18 n= 5 avg +0.747R | outside n= 3 avg -0.852R | within-regime diff +1.599R
+equal-weight common-support contrast across 3 regimes: +1.538R (10-18 minus outside)
 
 BTC 15M UTC 10-18 leave-one-risk-band-out stress (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC cohort, removes each already-predeclared broad structural-risk band once and recomputes the remainder. This tests risk-mix concentration only; it does not create a risk/session filter.
