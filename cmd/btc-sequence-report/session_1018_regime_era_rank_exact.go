@@ -89,7 +89,26 @@ func init() {
 			continue
 		}
 
-		ranks := rankMidranks(trades)
+		order := make([]int, len(trades))
+		for i := range order {
+			order[i] = i
+		}
+		sort.SliceStable(order, func(i, j int) bool {
+			return trades[order[i]].netR < trades[order[j]].netR
+		})
+		ranks := make([]float64, len(trades))
+		for start := 0; start < len(order); {
+			end := start + 1
+			for end < len(order) && trades[order[end]].netR == trades[order[start]].netR {
+				end++
+			}
+			midrank := (float64(start+1) + float64(end)) / 2.0
+			for pos := start; pos < end; pos++ {
+				ranks[order[pos]] = midrank
+			}
+			start = end
+		}
+
 		inSum, outSum := 0.0, 0.0
 		for i, tr := range trades {
 			if tr.inside {
@@ -169,6 +188,30 @@ func rankFixedEra(year int) string {
 	}
 }
 
-func rankMidranks[T interface{ ~struct{ netR float64; inside bool } }](trades []T) []float64 {
-	return nil
+// rankEnumerateFixedCountDiffs returns the inside-minus-outside mean-rank
+// difference for every subset of size inN within one fixed regime-by-era stratum.
+func rankEnumerateFixedCountDiffs(vals []float64, inN int) []float64 {
+	if inN <= 0 || inN >= len(vals) {
+		return nil
+	}
+	total := 0.0
+	for _, v := range vals {
+		total += v
+	}
+	outN := len(vals) - inN
+	out := make([]float64, 0)
+	var choose func(start, left int, inSum float64)
+	choose = func(start, left int, inSum float64) {
+		if left == 0 {
+			outSum := total - inSum
+			out = append(out, inSum/float64(inN)-outSum/float64(outN))
+			return
+		}
+		last := len(vals) - left
+		for i := start; i <= last; i++ {
+			choose(i+1, left-1, inSum+vals[i])
+		}
+	}
+	choose(0, inN, 0)
+	return out
 }
