@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-11T18:20:14Z
-# git_commit_before_report: 03907381a4408161febb61c137a6382e8993a73a
+# generated_utc: 2026-09-12T03:58:50Z
+# git_commit_before_report: 28269a3366bad1b25a6879dbfe6b7776f99dded9
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -398,6 +398,13 @@ Exact frozen trades only, using the master report's predeclared eras. Counts and
 2020-2022    | 10-18 n=3 | outside n=3 | all n=6 | 10-18 share 50.0%
 2023-2025    | 10-18 n=0 | outside n=1 | all n=1 | 10-18 share 0.0%
 2026 PARTIAL | 10-18 n=0 | outside n=2 | all n=2 | 10-18 share 0.0%
+
+BTC 15M UTC 10-18 leave-one-regime-out stress (DESCRIPTIVE; frozen rules unchanged):
+Within the fixed 10-18 UTC entry cohort only, removes each represented causal 30D regime cohort once and recomputes remaining NetR/PF. This tests regime concentration inside the session; it does not create a regime/session filter.
+omit BEAR_30D     | removed  3 trades +4.241R | remaining  6 trades +5.248R avg +0.875R | net-win 83.3% | PF 155.35
+omit SIDEWAYS_30D | removed  1 trades +1.512R | remaining  8 trades +7.977R avg +0.997R | net-win 87.5% | PF 235.62
+omit BULL_30D     | removed  5 trades +3.736R | remaining  4 trades +5.753R avg +1.438R | net-win 100.0% | PF +Inf
+regime-jackknife remaining-NetR range: +5.248R to +7.977R across 3 represented regimes
 
 BTC 15M UTC 10-18 leave-one-risk-band-out stress (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC cohort, removes each already-predeclared broad structural-risk band once and recomputes the remainder. This tests risk-mix concentration only; it does not create a risk/session filter.
