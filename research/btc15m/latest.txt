@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-12T15:49:13Z
-# git_commit_before_report: 6f45d82caf618fcb898657b492b470cebc534882
+# generated_utc: 2026-09-12T21:15:49Z
+# git_commit_before_report: a12e526b157944886a9d527a7f6b709c4ec0c0f3
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -439,6 +439,18 @@ omit BEAR_30D|2020-2022       | strata 4 | observed rank +1.875 | assignments 60
 omit BULL_30D|2017-2019       | strata 4 | observed rank +1.375 | assignments 80 | exact two-sided p=0.0250
 omit BULL_30D|2020-2022       | strata 4 | observed rank +1.875 | assignments 600 | exact two-sided p=0.0033
 omit SIDEWAYS_30D|2020-2022   | strata 4 | observed rank +1.875 | assignments 600 | exact two-sided p=0.0033
+
+BTC 15M UTC 10-18 regime+era matched exact sign diagnostic (DESCRIPTIVE; frozen rules unchanged):
+Within each common-support regime+era stratum, reduces frozen NetR to positive versus non-positive outcome and exactly randomizes the fixed number of 10-18 labels. This bounded binary-outcome stress ignores payoff magnitude and changes no filter or trading rule.
+  BEAR_30D|2017-2019       | n= 5 | 10-18 n= 2 | observed positive-rate diff +1.000
+  BEAR_30D|2020-2022       | n= 2 | 10-18 n= 1 | observed positive-rate diff +0.000
+  BULL_30D|2017-2019       | n= 6 | 10-18 n= 4 | observed positive-rate diff +0.750
+  BULL_30D|2020-2022       | n= 2 | 10-18 n= 1 | observed positive-rate diff +1.000
+  SIDEWAYS_30D|2020-2022   | n= 2 | 10-18 n= 1 | observed positive-rate diff +0.000
+observed equal-weight regime+era positive-rate contrast: +0.550 across 5 common-support strata
+fixed-margin assignments enumerated: 1200 (expected 1200)
+exact one-sided P(random sign contrast >= observed) = 0.0100
+exact two-sided P(|random sign contrast| >= |observed|) = 0.0100
 
 BTC 15M UTC 10-18 leave-one-regime-out stress (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC entry cohort only, removes each represented causal 30D regime cohort once and recomputes remaining NetR/PF. This tests regime concentration inside the session; it does not create a regime/session filter.
