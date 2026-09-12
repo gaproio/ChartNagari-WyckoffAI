@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-12T05:59:09Z
-# git_commit_before_report: 7ed956e15de1dc151be68bf2b547c0eed84895e6
+# generated_utc: 2026-09-12T06:41:38Z
+# git_commit_before_report: 5dd260da74c5ebd944f8a7fe307d0548ec1808d8
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -398,6 +398,19 @@ Exact frozen trades only, using the master report's predeclared eras. Counts and
 2020-2022    | 10-18 n=3 | outside n=3 | all n=6 | 10-18 share 50.0%
 2023-2025    | 10-18 n=0 | outside n=1 | all n=1 | 10-18 share 0.0%
 2026 PARTIAL | 10-18 n=0 | outside n=2 | all n=2 | 10-18 share 0.0%
+
+BTC 15M UTC 10-18 regime+era matched exact randomization (DESCRIPTIVE; frozen rules unchanged):
+Strata are causal 30D regime x fixed calendar era (2017-19, 2020-22, 2023-25, 2026 partial). Within each common-support stratum, holds the observed 10-18 trade count fixed and exactly enumerates session-label assignments. Statistic is the equal-weight mean within-stratum NetR contrast; no session/regime/era filter is created.
+common-support regime+era strata: 5
+  BEAR_30D|2017-2019       n= 5 | 10-18 n= 2 | observed diff +1.819R
+  BEAR_30D|2020-2022       n= 2 | 10-18 n= 1 | observed diff +0.023R
+  BULL_30D|2017-2019       n= 6 | 10-18 n= 4 | observed diff +1.403R
+  BULL_30D|2020-2022       n= 2 | 10-18 n= 1 | observed diff +2.140R
+  SIDEWAYS_30D|2020-2022   n= 2 | 10-18 n= 1 | observed diff +0.307R
+observed equal-weight regime+era contrast: +1.138R
+fixed-margin assignments enumerated: 1200 (expected 1200)
+exact one-sided P(random contrast >= observed) = 0.0008
+exact two-sided P(|random contrast| >= |observed|) = 0.0008
 
 BTC 15M UTC 10-18 leave-one-regime-out stress (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC entry cohort only, removes each represented causal 30D regime cohort once and recomputes remaining NetR/PF. This tests regime concentration inside the session; it does not create a regime/session filter.
