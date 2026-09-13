@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-13T00:10:45Z
-# git_commit_before_report: 8630e7457c736ecc908acc4c74bc447054701dca
+# generated_utc: 2026-09-13T04:33:14Z
+# git_commit_before_report: 02c24c3205b2f6775f81cecb7c00eb3df7dcfbc2
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -459,6 +459,28 @@ omit BEAR_30D|2020-2022       | strata 4 | observed sign +0.688 | assignments 60
 omit BULL_30D|2017-2019       | strata 4 | observed sign +0.500 | assignments 80 | exact two-sided p=0.0500
 omit BULL_30D|2020-2022       | strata 4 | observed sign +0.438 | assignments 600 | exact two-sided p=0.0200
 omit SIDEWAYS_30D|2020-2022   | strata 4 | observed sign +0.688 | assignments 600 | exact two-sided p=0.0100
+
+BTC 15M UTC 10-18 regime+era sign single-trade influence stress (DESCRIPTIVE; frozen rules unchanged):
+Removes each trade from the existing common-support regime+era sign comparison once. The original stratum set is retained only when both 10-18 and outside-session observations remain in every stratum; otherwise the deletion is flagged as support-breaking. No filter or trading rule changes.
+omit 2017-10-22 14:15 BULL_30D|2017-2019       10-18   positive     | equal-weight sign contrast +0.533
+omit 2017-12-01 15:30 BULL_30D|2017-2019       10-18   positive     | equal-weight sign contrast +0.533
+omit 2017-12-11 13:00 BULL_30D|2017-2019       10-18   non-positive | equal-weight sign contrast +0.600
+omit 2017-12-29 22:00 BULL_30D|2017-2019       outside non-positive | equal-weight sign contrast +0.550
+omit 2018-01-14 16:30 BEAR_30D|2017-2019       10-18   positive     | equal-weight sign contrast +0.550
+omit 2018-01-21 23:45 BEAR_30D|2017-2019       outside non-positive | equal-weight sign contrast +0.550
+omit 2018-03-09 10:30 BULL_30D|2017-2019       10-18   positive     | equal-weight sign contrast +0.533
+omit 2018-03-30 08:00 BEAR_30D|2017-2019       outside non-positive | equal-weight sign contrast +0.550
+omit 2018-06-11 17:45 BEAR_30D|2017-2019       10-18   positive     | equal-weight sign contrast +0.550
+omit 2018-12-05 08:45 BEAR_30D|2017-2019       outside non-positive | equal-weight sign contrast +0.550
+omit 2019-10-28 04:30 BULL_30D|2017-2019       outside non-positive | equal-weight sign contrast +0.550
+omit 2021-01-10 22:15 BULL_30D|2020-2022       outside non-positive | common support LOST
+omit 2021-01-11 17:45 BULL_30D|2020-2022       10-18   positive     | common support LOST
+omit 2021-04-07 21:45 SIDEWAYS_30D|2020-2022   outside positive     | common support LOST
+omit 2021-06-22 16:15 SIDEWAYS_30D|2020-2022   10-18   positive     | common support LOST
+omit 2021-06-24 09:00 BEAR_30D|2020-2022       outside positive     | common support LOST
+omit 2022-01-24 14:45 BEAR_30D|2020-2022       10-18   positive     | common support LOST
+single-trade deletions: 11 preserve all 5 common-support strata, 6 break support
+support-preserving leave-one-trade-out sign-contrast range: +0.533 to +0.600
 
 BTC 15M UTC 10-18 leave-one-regime-out stress (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC entry cohort only, removes each represented causal 30D regime cohort once and recomputes remaining NetR/PF. This tests regime concentration inside the session; it does not create a regime/session filter.
