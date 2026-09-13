@@ -1,6 +1,6 @@
 # BTCUSDT / 15M automated master report
-# generated_utc: 2026-09-12T21:15:49Z
-# git_commit_before_report: a12e526b157944886a9d527a7f6b709c4ec0c0f3
+# generated_utc: 2026-09-13T00:10:45Z
+# git_commit_before_report: 8630e7457c736ecc908acc4c74bc447054701dca
 # days: 3300
 # end: 2026-08-31
 # fee_bps_per_side: 10
@@ -451,6 +451,14 @@ observed equal-weight regime+era positive-rate contrast: +0.550 across 5 common-
 fixed-margin assignments enumerated: 1200 (expected 1200)
 exact one-sided P(random sign contrast >= observed) = 0.0100
 exact two-sided P(|random sign contrast| >= |observed|) = 0.0100
+
+BTC 15M UTC 10-18 regime+era exact sign leave-one-stratum-out stress (DESCRIPTIVE; frozen rules unchanged):
+Repeats the fixed-margin positive/non-positive randomization after omitting each common-support regime+era stratum once. This bounded binary-outcome concentration stress ignores payoff magnitude and changes no filter or trading rule.
+omit BEAR_30D|2017-2019       | strata 4 | observed sign +0.438 | assignments 120 | exact two-sided p=0.2000
+omit BEAR_30D|2020-2022       | strata 4 | observed sign +0.688 | assignments 600 | exact two-sided p=0.0100
+omit BULL_30D|2017-2019       | strata 4 | observed sign +0.500 | assignments 80 | exact two-sided p=0.0500
+omit BULL_30D|2020-2022       | strata 4 | observed sign +0.438 | assignments 600 | exact two-sided p=0.0200
+omit SIDEWAYS_30D|2020-2022   | strata 4 | observed sign +0.688 | assignments 600 | exact two-sided p=0.0100
 
 BTC 15M UTC 10-18 leave-one-regime-out stress (DESCRIPTIVE; frozen rules unchanged):
 Within the fixed 10-18 UTC entry cohort only, removes each represented causal 30D regime cohort once and recomputes remaining NetR/PF. This tests regime concentration inside the session; it does not create a regime/session filter.
